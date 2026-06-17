@@ -21,17 +21,17 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--font);
 #bg{position:fixed;inset:0;z-index:-1;transition:background .6s ease;
   background:radial-gradient(circle at 50% 32%,var(--bg-top) 0%,var(--bg-mid) 52%,var(--bg-bot) 100%);}
 canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none;}
-#infobox{position:fixed;z-index:50;display:none;max-width:250px;background:var(--panel);border:.5px solid var(--panel-bd);border-radius:12px;padding:11px 13px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 12px 34px rgba(0,0,0,.34);pointer-events:auto;}
+#infobox{position:fixed;z-index:50;display:none;max-width:250px;background:var(--panel);border:.5px solid var(--panel-bd);border-radius:8px;padding:11px 13px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 12px 34px rgba(0,0,0,.34);pointer-events:auto;}
 #infobox .it{font-size:12.5px;font-weight:600;color:var(--tx);margin-bottom:5px;letter-spacing:-.01em;}
 #infobox .ib{font-size:12px;line-height:1.5;color:var(--tx-dim);}
 
 /* ---- shared site nav ---- */
-#gfnav{position:fixed;top:0;left:0;right:0;z-index:70;min-height:46px;display:flex;justify-content:center;align-items:center;gap:8px;padding:7px 16px;background:rgba(8,12,18,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:.5px solid rgba(255,255,255,.09);}
-#gfnav span{font-size:11px;font-weight:500;color:rgba(255,255,255,.38);letter-spacing:.08em;text-transform:uppercase;margin-right:4px;white-space:nowrap;}
-#gfnav a{font-size:12px;font-weight:500;text-decoration:none;padding:5px 12px;border-radius:18px;transition:all .18s;white-space:nowrap;}
-#gfnav a.active{background:rgba(255,255,255,.13);color:rgba(255,255,255,.92);border:.5px solid rgba(255,255,255,.24);}
-#gfnav a.inactive{background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);border:.5px solid rgba(255,255,255,.12);}
-#gfnav a:hover{color:rgba(255,255,255,.92);background:rgba(255,255,255,.12);}
+#gfnav{position:fixed;top:0;left:0;right:0;z-index:70;min-height:46px;display:flex;justify-content:center;align-items:center;gap:6px;padding:7px 16px;background:rgba(6,9,14,.84);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-bottom:.5px solid rgba(255,255,255,.08);}
+#gfnav span{font-size:10px;font-weight:600;color:rgba(255,255,255,.34);letter-spacing:.11em;text-transform:uppercase;margin-right:4px;white-space:nowrap;}
+#gfnav a{font-size:11.5px;font-weight:560;text-decoration:none;padding:5px 10px;border-radius:8px;transition:all .18s;white-space:nowrap;}
+#gfnav a.active{background:rgba(255,255,255,.14);color:rgba(255,255,255,.94);border:.5px solid rgba(255,255,255,.24);}
+#gfnav a.inactive{background:rgba(255,255,255,.045);color:rgba(255,255,255,.54);border:.5px solid rgba(255,255,255,.1);}
+#gfnav a:hover{color:rgba(255,255,255,.92);background:rgba(255,255,255,.11);}
 
 /* ---- top bar ---- */
 #top{position:fixed;top:46px;left:0;right:0;z-index:40;height:52px;display:flex;align-items:center;
@@ -39,7 +39,7 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 #brand{font-size:12px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--tx-dim);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #brand b{color:var(--tx);font-weight:600;}
-#gear{margin-left:auto;display:flex;align-items:center;gap:7px;font:inherit;font-size:12px;font-weight:500;
+#gear{margin-left:auto;display:flex;align-items:center;gap:7px;font:inherit;font-size:12px;font-weight:560;
   color:var(--tx-dim);background:var(--chip);border:.5px solid var(--panel-bd);border-radius:18px;
   padding:7px 13px;cursor:pointer;transition:all .2s;flex-shrink:0;}
 #gear:hover,#gear.open{color:var(--tx);background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);}
@@ -47,7 +47,7 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 
 /* ---- settings dropdown ---- */
 #settings{position:fixed;top:96px;right:16px;z-index:45;width:236px;background:var(--panel);
-  border:.5px solid var(--panel-bd);border-radius:15px;padding:15px 16px;
+  border:.5px solid var(--panel-bd);border-radius:8px;padding:15px 16px;
   -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 14px 40px rgba(0,0,0,.32);
   opacity:0;transform:translateY(-8px) scale(.98);transform-origin:top right;pointer-events:none;transition:all .2s ease;}
 #settings.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
@@ -75,7 +75,7 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 #captitle{font-size:clamp(17px,4.4vw,23px);font-weight:600;letter-spacing:-.01em;margin-top:3px;}
 #capbody{font-size:clamp(12px,3vw,13.5px);line-height:1.5;color:var(--tx-dim);margin-top:7px;}
 #capconf{display:inline-block;margin-top:9px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
-  padding:3px 10px;border-radius:11px;border:.5px solid var(--panel-bd);background:var(--chip);color:var(--tx-faint);}
+  padding:3px 10px;border-radius:8px;border:.5px solid var(--panel-bd);background:var(--chip);color:var(--tx-faint);}
 .conf-confirmed{color:#5fd39a!important;border-color:rgba(95,211,154,.4)!important;}
 .conf-interp{color:#ffc861!important;border-color:rgba(255,200,97,.4)!important;}
 .conf-hyp{color:#ff8aa8!important;border-color:rgba(255,138,168,.4)!important;}
@@ -83,7 +83,7 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 
 /* ---- left toggle panel ---- */
 #layers{position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:25;width:188px;max-height:74vh;overflow-y:auto;
-  background:var(--panel);border:.5px solid var(--panel-bd);border-radius:15px;padding:13px 14px;
+  background:var(--panel);border:.5px solid var(--panel-bd);border-radius:8px;padding:13px 14px;
   -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);transition:opacity .3s;}
 #layers h4{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-faint);margin-bottom:9px;}
 .lyr{display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;}
@@ -98,9 +98,9 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 
 /* ---- bottom stage rail ---- */
 #rail{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:25;display:flex;align-items:center;
-  gap:4px;background:var(--panel);border:.5px solid var(--panel-bd);border-radius:30px;padding:7px 9px;
+  gap:4px;background:var(--panel);border:.5px solid var(--panel-bd);border-radius:8px;padding:7px 9px;
   -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);max-width:94vw;}
-#rail button{font:inherit;width:34px;height:34px;border-radius:50%;border:.5px solid var(--panel-bd);
+#rail button{font:inherit;width:34px;height:34px;border-radius:8px;border:.5px solid var(--panel-bd);
   background:var(--chip);color:var(--tx-dim);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
 #rail button:hover{color:var(--tx);}
 #dots{display:flex;align-items:center;flex-wrap:nowrap;}
@@ -360,20 +360,23 @@ let originRing=null;
   label('O',new THREE.Vector3(-.16,-.16,-.03),'ink',.15,{always:true,layer:'origin'});
 })();
 
-/* ════════ STAGE 1 — HAND SKETCH ════════ */
-let sketchPlane=null, sketchUserOp=0.62;
-new THREE.TextureLoader().load('assets/handsketch.jpg',function(tex){
-  if('SRGBColorSpace' in THREE)tex.colorSpace=THREE.SRGBColorSpace;
-  const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false});
-  sketchPlane=new THREE.Mesh(new THREE.PlaneGeometry(3,4),mat);
-  sketchPlane.position.set(0.5,0.6,-0.012);sketchPlane.renderOrder=-2;
-  sketchPlane.userData={stage:1,layer:'sketch',maxOp:1,grow:false,isSketch:true};
-  items.push(sketchPlane);scene.add(sketchPlane);
-});
-// thin trace echoing the sketch; the equation lives in the hover description box (Stage 1 only)
+/* ════════ STAGE 1 — NOTEBOOK LINEWORK ════════ */
+let sketchUserOp=0.62;
+// Pure generated linework: no raster sketch/photo texture in this build.
 const s1desc={t:'The proof, by hand',b:'Gregg traces 1 : √2 : √3 straight from the cube — legs 1 and √2, hypotenuse √3, so 1² + (√2)² = (√3)². Hover any line for its meaning.'};
+[
+  [new THREE.Vector3(-.7,-.32,-.015),new THREE.Vector3(1.55,-.24,-.015)],
+  [new THREE.Vector3(-.62,-.58,-.015),new THREE.Vector3(1.46,-.42,-.015)],
+  [new THREE.Vector3(.25,-.95,-.015),new THREE.Vector3(1.02,.55,-.015)],
+  [new THREE.Vector3(.0,.15,-.015),new THREE.Vector3(1.32,.84,-.015)],
+  [new THREE.Vector3(.48,-.18,-.015),new THREE.Vector3(.96,.76,-.015)]
+].forEach(function(seg){line(seg[0],seg[1],'ink',{stage:1,maxStage:1,layer:'sketch',maxOp:.22,overlay:true,desc:s1desc});});
 [[O,A],[A,B],[O,B]].forEach(function(seg){line(seg[0],seg[1],'ink',{stage:1,maxStage:1,layer:'sketch',maxOp:.5,grow:true,overlay:true,desc:s1desc});});
 triFill(O,A,B,'tri',{stage:1,maxStage:1,layer:'sketch',maxOp:.08,overlay:true,overlayOrder:1,desc:s1desc});
+label('35°?',new THREE.Vector3(-.45,-.43,.02),'ink',.1,{stage:1,maxStage:1,layer:'sketch',maxOp:.6});
+label('55°',new THREE.Vector3(.88,.07,.02),'ink',.1,{stage:1,maxStage:1,layer:'sketch',maxOp:.6});
+label('√2',new THREE.Vector3(1.15,.78,.02),'ink',.11,{stage:1,maxStage:1,layer:'sketch',maxOp:.6});
+label('√3',new THREE.Vector3(.95,.48,.02),'ink',.11,{stage:1,maxStage:1,layer:'sketch',maxOp:.6});
 
 /* ════════ STAGE 2 — CLEAN 2D CONSTRUCTION ════════ */
 // base square (these 4 edges ARE the cube's bottom outline for all later stages — no duplicates drawn)
@@ -520,34 +523,27 @@ let rd=null;
   label('120° dihedral',new THREE.Vector3(1.18,1.18,1.18),'angle',.12,{stage:8,layer:'rhombic'});
 })();
 
-/* ---- STAGE 9 — ARCHITECTURE (photo cards + dihedral family) ---- */
+/* ---- STAGE 9 — ARCHITECTURE (schematic linework + dihedral family) ---- */
 (function(){
   // Captions verified 2026-06-17 against Gregg_Master_Context_v2.
   const cards=[
-    ['assets/arch/otic.jpg','Otic Oasis · Burning Man 2011',{t:'Otic Oasis (2011–2014)',b:'Pod + node hybrid of interlocking birch plywood, no metal fasteners. Five builds at Burning Man, 2011–2014. The rhombic-dodecahedron “pods” are this geometry at human scale.'}],
-    ['assets/arch/temple.jpg','Temple of Whollyness · 2013',{t:'Temple of Whollyness (2013)',b:'A 115-ft-square, 63-ft-tall pyramid of CNC-cut birch plywood, assembled in 15 days with no metal fasteners — only custom nodes and pins. The octahedral–tetrahedral space frame realised.'}],
-    ['assets/arch/skyportal.jpg','Sky Portal X · 2022–present',{t:'Sky Portal X (2022–)',b:'Slot-to-slot panels locked with a pin; panels meet at 90° to generate the cubic family of polyhedra. Gregg’s “building blocks of Infinite Architecture”.'}],
-    ['assets/arch/satellite.jpg','Satellite · Burning Man 2019',{t:'Satellite (pod)',b:'A pod structure — truncated rhombic-dodecahedron shells that snap together by hand. The original Satellite design became the basis for Otic Oasis and the Solar Village.'}],
-    ['assets/arch/solarstage.jpg','Solar Stage · Wonderfruit',{t:'Solar Stage',b:'The pod + node system as a festival stage — Wonderfruit, Thailand, 2015–2019. Over 2,137 modular wood parts, raised in 48 hours by 9 people.'}],
-    ['assets/arch/node.jpg','Node Home · 2018',{t:'Node Home (2018)',b:'A residential-scale version of the Otic / Temple system — same octahedral–tetrahedral geometry, module 20% smaller. Part of Gregg’s housing-crisis response.'}]
+    ['Otic Oasis','Burning Man 2011–2014',{t:'Otic Oasis (2011–2014)',b:'Pod + node hybrid of interlocking birch plywood, no metal fasteners. Five builds at Burning Man, 2011–2014. The rhombic-dodecahedron “pods” are this geometry at human scale.'}],
+    ['Temple of Whollyness','2013',{t:'Temple of Whollyness (2013)',b:'A 115-ft-square, 63-ft-tall pyramid of CNC-cut birch plywood, assembled in 15 days with no metal fasteners — only custom nodes and pins. The octahedral–tetrahedral space frame realised.'}],
+    ['Sky Portal X','2022–present',{t:'Sky Portal X (2022–)',b:'Slot-to-slot panels locked with a pin; panels meet at 90° to generate the cubic family of polyhedra. Gregg’s “building blocks of Infinite Architecture”.'}],
+    ['Satellite','Burning Man 2019',{t:'Satellite (pod)',b:'A pod structure — truncated rhombic-dodecahedron shells that snap together by hand. The original Satellite design became the basis for Otic Oasis and the Solar Village.'}],
+    ['Solar Stage','Wonderfruit',{t:'Solar Stage',b:'The pod + node system as a festival stage — Wonderfruit, Thailand, 2015–2019. Over 2,137 modular wood parts, raised in 48 hours by 9 people.'}],
+    ['Node Home','2018',{t:'Node Home (2018)',b:'A residential-scale version of the Otic / Temple system — same octahedral–tetrahedral geometry, module 20% smaller. Part of Gregg’s housing-crisis response.'}]
   ];
   const N=cards.length, R=1.95;
   cards.forEach(function(c,i){
     const ang=(i/N)*Math.PI*2;
     const pos=new THREE.Vector3(CC.x+Math.cos(ang)*R, CC.y+Math.sin(ang)*R, 0.5+(i%2?0.55:-0.35));
-    const mat=new THREE.SpriteMaterial({transparent:true,opacity:0,depthTest:true});
-    const sp=new THREE.Sprite(mat);sp.position.copy(pos);sp.scale.set(1.5,1.12,1);
-    sp.userData={custom:true,desc:c[2]};items.push(sp);scene.add(sp);
-    let loaded=false;
-    updaters.push(function(){
-      const show=(stage>=9)&&layerOn.arch;
-      if(show&&!loaded){
-        loaded=true;
-        new THREE.TextureLoader().load(c[0],function(tex){if('SRGBColorSpace' in THREE)tex.colorSpace=THREE.SRGBColorSpace;mat.map=tex;mat.needsUpdate=true;const ar=(tex.image&&tex.image.width)?tex.image.width/tex.image.height:1.4;sp.scale.set(1.35*ar,1.35,1);});
-      }
-      mat.opacity+=((show?1:0)-mat.opacity)*0.08;
-    });
-    label(c[1],new THREE.Vector3(pos.x,pos.y,pos.z-0.85),'ink',.115,{stage:9,layer:'arch',maxOp:.9});
+    const w=.62,h=.42;
+    const a=new THREE.Vector3(pos.x-w,pos.y,pos.z-h), b=new THREE.Vector3(pos.x+w,pos.y,pos.z-h), cc=new THREE.Vector3(pos.x+w,pos.y,pos.z+h), d=new THREE.Vector3(pos.x-w,pos.y,pos.z+h);
+    [[a,b],[b,cc],[cc,d],[d,a],[a,cc],[b,d]].forEach(function(seg){line(seg[0],seg[1],i%2?'unit':'face',{stage:9,layer:'arch',maxOp:.64,overlay:true,desc:c[2]});});
+    dot(pos,i%2?'unit':'face',.035,{stage:9,layer:'arch',maxOp:.9,overlay:true,desc:c[2]});
+    label(c[0],new THREE.Vector3(pos.x,pos.y,pos.z-.62),'ink',.108,{stage:9,layer:'arch',maxOp:.92});
+    label(c[1],new THREE.Vector3(pos.x,pos.y,pos.z-.79),'ghost',.08,{stage:9,layer:'arch',maxOp:.72});
   });
   const fam=[
     'Rhombic Dodecahedron — 120°',
