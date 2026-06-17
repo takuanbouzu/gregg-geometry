@@ -116,13 +116,16 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 
 /* ---- responsive ---- */
 @media(max-width:720px){
-  #gfnav{justify-content:flex-start;overflow-x:auto;padding-left:10px;padding-right:10px;}
+  #gfnav{justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-left:10px;padding-right:10px;}
   #gfnav span{font-size:10px;}
   #gfnav a{font-size:11px;padding:5px 10px;}
   #layers{width:150px;left:10px;padding:11px 11px;}
   #cap{top:102px;}
   #stagelabel{min-width:70px;font-size:10px;}
   #brand{font-size:10px;letter-spacing:.08em;}
+  #rail{gap:3px;padding:6px 8px;bottom:calc(16px + env(safe-area-inset-bottom));}
+  #rail button{width:30px;height:30px;font-size:14px;}
+  .dot{width:8px;height:8px;margin:0 1px;}
 }
 @media(max-height:560px){
   #cap{top:96px;}
@@ -131,7 +134,13 @@ body.minimal #capbody,body.minimal #brand{display:none;}
   #hint{display:none;}
 }
 @media(max-width:430px){
-  #layers{top:auto;bottom:64px;transform:none;max-height:42vh;width:142px;}
+  #cap{top:98px;max-width:92vw;}
+  #captitle{font-size:18px;}
+  #capbody{font-size:11.5px;line-height:1.45;margin-top:5px;}
+  #layers{top:auto;bottom:78px;transform:none;max-height:38vh;width:140px;padding:10px 11px;}
+  #layers h4{margin-bottom:6px;}
+  .lyr{padding:4px 0;}
+  #hint{bottom:60px;font-size:10.5px;}
 }
 </style>
 </head>
@@ -142,6 +151,8 @@ body.minimal #capbody,body.minimal #brand{display:none;}
   <a href="cube-diagonals.html" class="inactive">Cube Diagonals</a>
   <a href="lost-triangle.html" class="inactive">Lost Triangle</a>
   <a href="rhombic-dodecahedron.html" class="inactive">Rhombic Dodecahedron</a>
+  <a href="vector-house.html" class="inactive">Vector House</a>
+  <a href="silver-triangle.html" class="inactive">Silver Triangle</a>
   <a href="poster/poster.html" class="inactive">Poster</a>
 </div>
 <div id="bg"></div>
@@ -511,14 +522,14 @@ let rd=null;
 
 /* ---- STAGE 9 — ARCHITECTURE (photo cards + dihedral family) ---- */
 (function(){
-  // TODO(claude): verify every architecture photo caption/date/project label before publication.
+  // Captions verified 2026-06-17 against Gregg_Master_Context_v2.
   const cards=[
-    ['assets/arch/otic.jpg','Otic Oasis · BRC 2011',{t:'Otic Oasis (2011–12)',b:'Pod + node hybrid of interlocking birch plywood, no metal fasteners. The rhombic-dodecahedron “pods” are this geometry at human scale.'}],
-    ['assets/arch/temple.jpg','Temple of Whollyness · 2013',{t:'Temple of Whollyness (2013)',b:'A six-storey pyramid of CNC-cut wood assembled in 15 days with no nails or glue — the octahedral–tetrahedral space frame realised.'}],
-    ['assets/arch/skyportal.jpg','Sky Portal Station',{t:'Sky Portal series',b:'Slot-to-slot panels locked with a pin; planes meet at 90°. The building blocks of “infinite architecture”.'}],
-    ['assets/arch/satellite.jpg','Satellite · BM 2019',{t:'Satellite',b:'Node-structure assembly extending the Temple system into new forms.'}],
-    ['assets/arch/solarstage.jpg','Solar Stage · Wonderfruit',{t:'Solar Stage',b:'The node + pod system as a festival stage — Wonderfruit, Thailand, 2015–2019.'}],
-    ['assets/arch/node.jpg','Node Home',{t:'Node Home',b:'A residential-scale version of the Temple node system — same geometry, smaller module.'}]
+    ['assets/arch/otic.jpg','Otic Oasis · Burning Man 2011',{t:'Otic Oasis (2011–2014)',b:'Pod + node hybrid of interlocking birch plywood, no metal fasteners. Five builds at Burning Man, 2011–2014. The rhombic-dodecahedron “pods” are this geometry at human scale.'}],
+    ['assets/arch/temple.jpg','Temple of Whollyness · 2013',{t:'Temple of Whollyness (2013)',b:'A 115-ft-square, 63-ft-tall pyramid of CNC-cut birch plywood, assembled in 15 days with no metal fasteners — only custom nodes and pins. The octahedral–tetrahedral space frame realised.'}],
+    ['assets/arch/skyportal.jpg','Sky Portal X · 2022–present',{t:'Sky Portal X (2022–)',b:'Slot-to-slot panels locked with a pin; panels meet at 90° to generate the cubic family of polyhedra. Gregg’s “building blocks of Infinite Architecture”.'}],
+    ['assets/arch/satellite.jpg','Satellite · Burning Man 2019',{t:'Satellite (pod)',b:'A pod structure — truncated rhombic-dodecahedron shells that snap together by hand. The original Satellite design became the basis for Otic Oasis and the Solar Village.'}],
+    ['assets/arch/solarstage.jpg','Solar Stage · Wonderfruit',{t:'Solar Stage',b:'The pod + node system as a festival stage — Wonderfruit, Thailand, 2015–2019. Over 2,137 modular wood parts, raised in 48 hours by 9 people.'}],
+    ['assets/arch/node.jpg','Node Home · 2018',{t:'Node Home (2018)',b:'A residential-scale version of the Otic / Temple system — same octahedral–tetrahedral geometry, module 20% smaller. Part of Gregg’s housing-crisis response.'}]
   ];
   const N=cards.length, R=1.95;
   cards.forEach(function(c,i){
