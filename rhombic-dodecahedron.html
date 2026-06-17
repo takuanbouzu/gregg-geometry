@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Rhombic Dodecahedron — Gregg Fleishman</title>
+<link rel="icon" href="data:,">
 <style>
   :root{
     --bg:#f6f2e8;--ink:#141414;--muted:#6b665d;--grid:#d9d2c3;
@@ -20,6 +21,7 @@
   #gfnav a{font-size:12px;font-weight:500;text-decoration:none;padding:5px 14px;border-radius:18px;transition:all .18s;}
   #gfnav a.active{background:rgba(20,20,20,.1);color:rgba(20,20,20,.85);border:.5px solid rgba(20,20,20,.2);}
   #gfnav a.inactive{background:rgba(246,242,232,.7);color:rgba(20,20,20,.45);border:.5px solid rgba(20,20,20,.1);}
+  @media(max-width:720px){#gfnav{justify-content:flex-start;overflow-x:auto;padding:0 10px;}#gfnav a{font-size:11px;padding:5px 10px;}#gfnav span{font-size:10px;white-space:nowrap;}}
   #wrap{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden;}
   canvas{display:block;position:absolute;top:0;left:0;width:100%;height:100%;}
   .panel{position:absolute;z-index:10;background:rgba(255,250,240,.88);border:1px solid rgba(20,20,20,.1);box-shadow:0 8px 28px rgba(40,28,8,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:14px;padding:14px 16px;}
@@ -41,9 +43,11 @@
 <body>
 <div id="gfnav">
   <span>Gregg Fleishman</span>
-  <a href="index.html" class="inactive">Cube Diagonals</a>
+  <a href="index.html" class="inactive">Geometry Lesson</a>
+  <a href="cube-diagonals.html" class="inactive">Cube Diagonals</a>
   <a href="lost-triangle.html" class="inactive">Lost Triangle</a>
   <a href="rhombic-dodecahedron.html" class="active">Rhombic Dodecahedron</a>
+  <a href="poster/poster.html" class="inactive">Poster</a>
 </div>
 <div id="wrap">
   <canvas id="scene"></canvas>
