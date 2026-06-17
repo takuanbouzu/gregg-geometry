@@ -191,7 +191,7 @@ body.minimal #capbody,body.minimal #brand{display:none;}
   <div id="layerlist"></div>
 </div>
 
-<div id="hint">drag to orbit · scroll to zoom · hover for details</div>
+<div id="hint">← → to navigate · drag to orbit · scroll to zoom · hover for details</div>
 
 <div id="rail">
   <button id="prev">‹</button>
@@ -577,7 +577,7 @@ let rd=null;
   const ls=new THREE.LineSegments(g,mat);
   ls.userData={custom:true,desc:{t:'Infinite architecture',b:'The rhombic dodecahedron is the Voronoi cell of the face-centred-cubic (FCC) lattice — it close-packs to fill space with no gaps. This is the rigorous basis of Gregg’s “infinite architecture”. Expansion onto XYZ Cartesian space beyond this is hypothesis.'}};
   items.push(ls);scene.add(ls);
-  updaters.push(function(){const show=(stage>=10)&&layerOn.rhombic;mat.opacity+=((show?0.5:0)-mat.opacity)*0.08;});
+  updaters.push(function(){const show=(stage>=9)&&layerOn.rhombic;mat.opacity+=((show?0.5:0)-mat.opacity)*0.08;});
 })();
 
 /* ════════ LAYER TOGGLES ════════ */
@@ -647,12 +647,9 @@ const STAGES=[
   {n:8,title:'Rhombic Dodecahedron',conf:'confirmed',confTxt:'Confirmed geometry',
    body:"Cap each cube face with a Lost-Triangle pyramid → the Rhombicube. 12 silver-rhombus faces (1:√2), angles 70.5° / 109.5°, 120° dihedral.",
    cam:{az:-2.35,el:0.5,r:5.0}},
-  {n:9,title:'Architectural System',conf:'interp',confTxt:'Interpretation · built work',
-   body:"The same dihedral family built at human scale — Otic Oasis, Temple of Whollyness, the Sky Portal series, node structures.",
-   cam:{az:-2.0,el:0.42,r:6.4}},
-  {n:10,title:'Infinite Architecture',conf:'interp',confTxt:'Confirmed tiling · XYZ expansion is hypothesis',
-   body:"The rhombic dodecahedron is the Voronoi cell of the FCC lattice — it fills space with no gaps. The rigorous basis of ‘infinite architecture’.",
-   cam:{az:-2.2,el:0.46,r:6.6}}
+  {n:9,title:’Infinite Architecture’,conf:’interp’,confTxt:’Confirmed tiling · built work’,
+   body:"The rhombic dodecahedron tiles space with no gaps — the Voronoi cell of the FCC lattice. The same geometry built at human scale: Otic Oasis, Temple of Whollyness, Sky Portal X.",
+   cam:{az:-2.1,el:0.44,r:6.5}}
 ];
 let stage=1;
 const capnum=document.getElementById('capnum'),captitle=document.getElementById('captitle'),
@@ -668,9 +665,14 @@ let userInteracted=false, autoRotate=true;
 function setStage(n){
   n=Math.max(1,Math.min(STAGES.length,n));stage=n;userInteracted=false;
   const s=STAGES[n-1];
-  capnum.textContent='Stage '+n;captitle.textContent=s.title;capbody.textContent=s.body;
-  capconf.textContent=s.confTxt;capconf.className='conf-'+(s.conf==='confirmed'?'confirmed':s.conf==='interp'?'interp':'hyp');
-  stagelabel.textContent=n+' / '+STAGES.length;
+  const cap=document.getElementById('cap');
+  cap.style.opacity='0';
+  setTimeout(function(){
+    capnum.textContent='Stage '+n;captitle.textContent=s.title;capbody.textContent=s.body;
+    capconf.textContent=s.confTxt;capconf.className='conf-'+(s.conf==='confirmed'?'confirmed':s.conf==='interp'?'interp':'hyp');
+    stagelabel.textContent=n+' / '+STAGES.length;
+    cap.style.opacity='1';
+  },160);
   camTgt={az:s.cam.az,el:s.cam.el,r:s.cam.r};
   items.forEach(function(it){if(it.userData.grow&&it.userData.stage===n)it.userData.prog=0;});
   Array.from(dots.children).forEach(function(d,i){d.classList.toggle('on',i===n-1);});
@@ -762,7 +764,11 @@ function hoverPick(x,y){
 }
 canvas.addEventListener('mousemove',function(e){if(!drag)hoverPick(e.clientX,e.clientY);});
 window.addEventListener('mousedown',function(e){if(infoOn&&!infobox.contains(e.target))hideInfo();});
-window.addEventListener('keydown',function(e){if(e.key==='Escape')hideInfo();});
+window.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){setStage(stage+1);killHint();}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){setStage(stage-1);killHint();}
+  if(e.key==='Escape')hideInfo();
+});
 
 /* ════════ ANIMATION ════════ */
 function ease(x){x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);}
