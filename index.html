@@ -11,8 +11,13 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#080c12;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;}
 canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;touch-action:none;}
+#gfnav{position:fixed;top:0;left:0;right:0;z-index:999;height:46px;display:flex;justify-content:center;align-items:center;gap:8px;padding:0 16px;background:rgba(8,12,18,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:.5px solid rgba(255,255,255,.08);}
+#gfnav span{font-size:11px;font-weight:500;color:rgba(255,255,255,.25);letter-spacing:.08em;text-transform:uppercase;margin-right:4px;}
+#gfnav a{font-size:12px;font-weight:500;text-decoration:none;padding:5px 14px;border-radius:18px;transition:all .2s;}
+#gfnav a.active{background:rgba(255,255,255,.14);color:rgba(255,255,255,.9);border:.5px solid rgba(255,255,255,.22);}
+#gfnav a.inactive{background:transparent;color:rgba(255,255,255,.38);border:.5px solid rgba(255,255,255,.1);}
 #ui{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;}
-#hdr{position:absolute;top:env(safe-area-inset-top,0px);left:0;right:0;padding:18px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:14px;}
+#hdr{position:absolute;top:calc(46px + env(safe-area-inset-top,0px));left:0;right:0;padding:14px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:14px;}
 #title{font-size:clamp(13px,3.8vw,17px);font-weight:400;color:rgba(255,255,255,.9);letter-spacing:.01em;}
 #sub{font-size:clamp(10px,2.8vw,12px);color:rgba(255,255,255,.36);margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
 #leg{background:rgba(8,12,18,.82);border:.5px solid rgba(255,255,255,.14);border-radius:12px;padding:11px 14px;pointer-events:auto;flex-shrink:0;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);}
@@ -38,6 +43,11 @@ canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;touch-ac
 </style>
 </head>
 <body>
+<div id="gfnav">
+  <span>Gregg Fleishman</span>
+  <a href="index.html" class="active">Cube Diagonals</a>
+  <a href="lost-triangle.html" class="inactive">Lost Triangle</a>
+</div>
 <canvas id="c"></canvas>
 <div id="ui">
   <div id="hdr">
