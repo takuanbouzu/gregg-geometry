@@ -17,7 +17,7 @@ canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;touch-ac
 #gfnav a.active{background:rgba(255,255,255,.14);color:rgba(255,255,255,.9);border:.5px solid rgba(255,255,255,.22);}
 #gfnav a.inactive{background:transparent;color:rgba(255,255,255,.38);border:.5px solid rgba(255,255,255,.1);}
 #ui{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;}
-#hdr{position:absolute;top:calc(46px + env(safe-area-inset-top,0px));left:0;right:0;padding:18px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:14px;}
+#hdr{position:absolute;top:calc(46px + env(safe-area-inset-top,0px));left:0;right:0;padding:14px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:14px;}
 #title{font-size:clamp(13px,3.8vw,17px);font-weight:400;color:rgba(255,255,255,.9);letter-spacing:.01em;}
 #sub{font-size:clamp(10px,2.8vw,12px);color:rgba(255,255,255,.36);margin-top:4px;letter-spacing:.05em;text-transform:uppercase;}
 #leg{background:rgba(8,12,18,.82);border:.5px solid rgba(255,255,255,.14);border-radius:12px;padding:11px 14px;pointer-events:auto;flex-shrink:0;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);}
@@ -25,9 +25,9 @@ canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;touch-ac
 .ll{width:20px;height:2px;border-radius:1px;flex-shrink:0;}
 .lt{font-size:clamp(9px,2.5vw,12px);color:rgba(255,255,255,.68);}
 .lt b{color:rgba(255,255,255,.92);font-weight:500;}
-#hint{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:rgba(8,12,18,.72);border:.5px solid rgba(255,255,255,.1);border-radius:20px;padding:8px 20px;font-size:clamp(10px,2.6vw,12px);color:rgba(255,255,255,.4);letter-spacing:.03em;white-space:nowrap;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:opacity .7s ease;}
+#hint{position:absolute;bottom:calc(26px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:rgba(8,12,18,.72);border:.5px solid rgba(255,255,255,.1);border-radius:20px;padding:8px 20px;font-size:clamp(10px,2.6vw,12px);color:rgba(255,255,255,.4);letter-spacing:.03em;white-space:nowrap;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:opacity .7s ease;}
 #hint.gone{opacity:0;pointer-events:none;}
-#ibtn{position:absolute;right:24px;bottom:calc(30px + env(safe-area-inset-bottom,0px));width:40px;height:40px;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.14);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;color:rgba(255,255,255,.5);cursor:pointer;pointer-events:auto;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .2s,color .2s;}
+#ibtn{position:absolute;right:20px;bottom:calc(26px + env(safe-area-inset-bottom,0px));width:40px;height:40px;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.14);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;color:rgba(255,255,255,.5);cursor:pointer;pointer-events:auto;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .2s,color .2s;}
 #ibtn:active{background:rgba(255,255,255,.18);}
 #panel{position:absolute;bottom:0;left:0;right:0;background:rgba(6,9,15,.97);border-top:.5px solid rgba(255,255,255,.12);border-radius:18px 18px 0 0;padding:16px 24px calc(32px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .42s cubic-bezier(.4,0,.2,1);pointer-events:auto;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);max-height:66vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 #panel.open{transform:translateY(0);}
@@ -47,6 +47,7 @@ canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;touch-ac
   <span>Gregg Fleishman</span>
   <a href="index.html" class="active">Cube Diagonals</a>
   <a href="lost-triangle.html" class="inactive">Lost Triangle</a>
+  <a href="rhombic-dodecahedron.html" class="inactive">Rhombic Dodecahedron</a>
 </div>
 <canvas id="c"></canvas>
 <div id="ui">
