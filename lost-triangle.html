@@ -18,10 +18,10 @@
   #wrap{position:relative;width:100%;height:100vh;min-height:680px;overflow:hidden;background:radial-gradient(circle at 50% 35%, #fffaf0 0%, #f6f2e8 52%, #e8deca 100%);padding-top:46px;}
   canvas{display:block;width:100%;height:100%;}
   .panel{position:absolute;z-index:10;background:rgba(255,250,240,.88);border:1px solid rgba(20,20,20,.13);box-shadow:0 10px 30px rgba(50,35,10,.08);backdrop-filter:blur(8px);border-radius:14px;padding:14px 16px;}
-  #title{left:18px;top:18px;max-width:520px;}
+  #title{left:18px;top:64px;max-width:520px;}
   #title h1{font-size:18px;line-height:1.16;margin:0 0 6px;font-weight:760;letter-spacing:-.02em;}
   #title p{font-size:12px;line-height:1.42;margin:0;color:var(--muted);}
-  #legend{right:18px;top:18px;width:245px;font-size:12px;}
+  #legend{right:18px;top:64px;width:245px;font-size:12px;}
   .row{display:flex;align-items:center;gap:9px;margin:7px 0;color:var(--muted);} .sw{width:28px;height:3px;border-radius:3px;background:#000;}
   .unit{background:var(--unit)} .face{background:var(--face)} .space{background:var(--space)} .tri{background:var(--tri)} .angle{background:var(--angle)}
   #formula{left:18px;bottom:18px;max-width:520px;font-size:13px;line-height:1.46;}
@@ -42,7 +42,7 @@
   <canvas id="scene"></canvas>
 
   <div id="title" class="panel">
-    <h1>1 : √2 : √3 — the cube's "lost triangle"</h1>
+    <h1>1 : √2 : √3 — the cube’s “lost triangle”</h1>
     <p>Construction sequence: two unit edges make a face diagonal √2; lift one unit vertically; the diagonal through the cube becomes √3.</p>
   </div>
 
@@ -146,17 +146,23 @@
   animLine(new THREE.Vector3(-.32,0,0),new THREE.Vector3(1.45,0,0),colors.ink,.15,.7,.72);
   animLine(new THREE.Vector3(0,-.32,0),new THREE.Vector3(0,1.45,0),colors.ink,.15,.7,.72);
   animLine(new THREE.Vector3(0,0,-.05),new THREE.Vector3(0,0,1.38),colors.ink,.3,.7,.72);
-  label('x',new THREE.Vector3(1.55,0,0),'#141414',.13,.8); label('y',new THREE.Vector3(0,1.55,0),'#141414',.13,.8); label('z',new THREE.Vector3(0,0,1.5),'#141414',.13,.8);
+  label('x',new THREE.Vector3(1.55,0,0),'#141414',.13,.8);
+  label('y',new THREE.Vector3(0,1.55,0),'#141414',.13,.8);
+  label('z',new THREE.Vector3(0,0,1.5),'#141414',.13,.8);
 
   animLine(O,X,colors.unit,.85,.65,1); animLine(O,Y,colors.unit,1.08,.65,1); animLine(X,A,colors.unit,1.28,.55,.85); animLine(Y,A,colors.unit,1.42,.55,.85);
-  label('1',new THREE.Vector3(.5,-.1,0),'#1769ff',.14,1.25); label('1',new THREE.Vector3(-.1,.5,0),'#1769ff',.14,1.35);
+  label('1',new THREE.Vector3(.5,-.1,0),'#1769ff',.14,1.25);
+  label('1',new THREE.Vector3(-.1,.5,0),'#1769ff',.14,1.35);
 
   const cubeEdges = [[O,X],[O,Y],[X,A],[Y,A],[Z,new THREE.Vector3(1,0,1)],[Z,new THREE.Vector3(0,1,1)],[new THREE.Vector3(1,0,1),B],[new THREE.Vector3(0,1,1),B],[O,Z],[X,new THREE.Vector3(1,0,1)],[Y,new THREE.Vector3(0,1,1)],[A,B]];
   cubeEdges.forEach((e,i)=>fadeObj(staticLine(e[0],e[1],colors.ghost,.22),1.55+i*.025,.4,.42));
 
-  animLine(O,A,colors.face,2.05,.9,1); label('sqrt2',new THREE.Vector3(.58,.58,-.12),'#e2811f',.17,2.65);
-  animLine(A,B,colors.unit,3.0,.75,1); label('1',new THREE.Vector3(1.12,1.08,.5),'#1769ff',.15,3.35);
-  animLine(O,B,colors.space,3.75,.95,1); label('sqrt3',new THREE.Vector3(.45,.45,.62),'#d9295f',.18,4.35);
+  animLine(O,A,colors.face,2.05,.9,1);
+  label('√2',new THREE.Vector3(.58,.58,-.12),'#e2811f',.17,2.65);
+  animLine(A,B,colors.unit,3.0,.75,1);
+  label('1',new THREE.Vector3(1.12,1.08,.5),'#1769ff',.15,3.35);
+  animLine(O,B,colors.space,3.75,.95,1);
+  label('√3',new THREE.Vector3(.45,.45,.62),'#d9295f',.18,4.35);
 
   const triGeo=new THREE.BufferGeometry();
   triGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array([O.x,O.y,O.z,A.x,A.y,A.z,B.x,B.y,B.z]),3));
@@ -165,26 +171,33 @@
   animLine(O,A,colors.tri,4.45,.35,.65); animLine(A,B,colors.tri,4.55,.35,.65); animLine(O,B,colors.tri,4.65,.35,.65);
 
   dot(O,colors.ink,.035,.6); dot(X,colors.unit,.028,1.15); dot(Y,colors.unit,.028,1.15); dot(A,colors.face,.04,2.65); dot(B,colors.space,.045,4.45);
-  label('O',new THREE.Vector3(-.09,-.08,.02),'#141414',.13,.75); label('A',new THREE.Vector3(1.1,1.1,-.04),'#141414',.13,2.7); label('B',new THREE.Vector3(1.1,1.1,1.08),'#141414',.13,4.45);
+  label('O',new THREE.Vector3(-.09,-.08,.02),'#141414',.13,.75);
+  label('A',new THREE.Vector3(1.1,1.1,-.04),'#141414',.13,2.7);
+  label('B',new THREE.Vector3(1.1,1.1,1.08),'#141414',.13,4.45);
 
   function arc(center,u,v,r,a0,a1,color,opacity,segments){
     const pts=[]; for(let i=0;i<=segments;i++){ const a=a0+(a1-a0)*i/segments; pts.push(center.clone().add(u.clone().multiplyScalar(Math.cos(a)*r)).add(v.clone().multiplyScalar(Math.sin(a)*r))); }
     const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),makeMat(color,opacity)); scene.add(line); return line;
   }
-  const baseDir=A.clone().sub(O).normalize(); const up=new THREE.Vector3(0,0,1);
+  const baseDir=A.clone().sub(O).normalize();
+  const up=new THREE.Vector3(0,0,1);
   const theta=Math.atan(1/Math.sqrt(2));
-  fadeObj(arc(O,baseDir,up,.32,0,theta,colors.angle,.95,48),.8,.55,.95); label('35.264',new THREE.Vector3(.32,.32,.12),'#927400',.12,5.05);
-  const down=new THREE.Vector3(0,0,-1); const bhoriz=O.clone().sub(B).sub(down.clone().multiplyScalar(O.clone().sub(B).dot(down))).normalize();
-  fadeObj(arc(B,down,bhoriz,.27,0,Math.PI/2-theta,colors.angle,.95,48),5.0,.55,.95); label('54.736',new THREE.Vector3(.76,.76,.72),'#927400',.12,5.25);
+  fadeObj(arc(O,baseDir,up,.32,0,theta,colors.angle,.95,48),4.8,.55,.95);
+  label('35.264°',new THREE.Vector3(.32,.32,.12),'#927400',.12,5.05);
+  const down=new THREE.Vector3(0,0,-1);
+  const bhoriz=O.clone().sub(B).sub(down.clone().multiplyScalar(O.clone().sub(B).dot(down))).normalize();
+  fadeObj(arc(B,down,bhoriz,.27,0,Math.PI/2-theta,colors.angle,.95,48),5.0,.55,.95);
+  label('54.736°',new THREE.Vector3(.76,.76,.72),'#927400',.12,5.25);
 
   function rightAngle(){
     const g=new THREE.Group(); const r=.13, p1=A.clone().add(baseDir.clone().multiplyScalar(-r)), p2=p1.clone().add(up.clone().multiplyScalar(r)), p3=A.clone().add(up.clone().multiplyScalar(r));
     g.add(staticLine(p1,p2,colors.ink,.8)); g.add(staticLine(p2,p3,colors.ink,.8)); g.add(staticLine(p3,A,colors.ink,.8)); scene.add(g); return g;
   }
-  fadeObj(rightAngle(),5.15,.45,.9); label('90',new THREE.Vector3(.9,.9,.16),'#141414',.105,5.35);
+  fadeObj(rightAngle(),5.15,.45,.9);
+  label('90°',new THREE.Vector3(.9,.9,.16),'#141414',.105,5.35);
 
   fadeObj(arc(O,new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0),.46,0,Math.PI/4,colors.ghost,.65,32),5.45,.45,.65);
-  label('45plan',new THREE.Vector3(.46,.18,.02),'#6b665d',.105,5.65);
+  label('45° plan',new THREE.Vector3(.46,.18,.02),'#6b665d',.105,5.65);
   fadeObj(arc(O,new THREE.Vector3(-1,0,0),new THREE.Vector3(0,1,0),.62,0,Math.PI*3/4,colors.ghost,.5,32),5.7,.55,.5);
 
   canvas.addEventListener('mousedown',e=>{dragging=true;px=e.clientX;py=e.clientY;});
@@ -196,7 +209,7 @@
   canvas.addEventListener('touchend',()=>dragging=false);
 
   document.getElementById('replay').onclick=function(){clock=new THREE.Clock(); timeOffset=0; paused=false; document.getElementById('pause').textContent='Pause';};
-  document.getElementById('pause').onclick=function(){paused=!paused; if(paused){pauseAt=clock.getElapsedTime();} else {timeOffset += clock.getElapsedTime()-pauseAt;} document.getElementById('pause').textContent=paused?'Resume':'Pause';};
+  document.getElementById('pause').onclick=function(){paused=!paused; if(paused){pauseAt=clock.getElapsedTime();} else {timeOffset+=clock.getElapsedTime()-pauseAt;} document.getElementById('pause').textContent=paused?'Resume':'Pause';};
 
   function updateLine(item,t){
     const p=phase(t,item.start,item.dur); const e=item.a.clone().lerp(item.b,p);
@@ -212,9 +225,10 @@
   function animate(){
     requestAnimationFrame(animate);
     const raw=paused?pauseAt:clock.getElapsedTime(); const t=(raw-timeOffset)%9.8;
-    animated.forEach(function(it){updateLine(it,t);}); fades.forEach(function(it){updateFade(it,t);});
-    const slowAz=az + Math.sin(raw*.18)*.13;
-    camera.position.set(target.x+rad*Math.cos(el)*Math.cos(slowAz), target.y+rad*Math.cos(el)*Math.sin(slowAz), target.z+rad*Math.sin(el));
+    animated.forEach(function(it){updateLine(it,t);});
+    fades.forEach(function(it){updateFade(it,t);});
+    const slowAz=az+Math.sin(raw*.18)*.13;
+    camera.position.set(target.x+rad*Math.cos(el)*Math.cos(slowAz),target.y+rad*Math.cos(el)*Math.sin(slowAz),target.z+rad*Math.sin(el));
     camera.lookAt(target);
     renderer.render(scene,camera);
   }
