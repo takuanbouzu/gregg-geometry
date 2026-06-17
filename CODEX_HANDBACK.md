@@ -8,14 +8,12 @@
 
 - Installed the new 10-stage Geometry Lesson prototype as the site hub at `index.html`.
 - Preserved the previous cube-diagonals page as `cube-diagonals.html`.
-- Copied the lesson assets into the repo:
-  - `assets/handsketch.jpg`
-  - `assets/arch/*.jpg`
-  - `poster/poster.html`
-  - `poster/Fleishman_Geometry_Poster_v1.svg`
-  - `poster/Fleishman_Geometry_Poster_v1.png`
+- Kept the visible build image-free for now:
+  - Stage 1 uses generated notebook linework instead of the hand sketch raster.
+  - Stage 9 uses schematic architecture linework instead of photo cards.
+  - Raster JPG/PNG assets were removed from the branch.
 - Added shared navigation across the hub, legacy pages, and poster.
-- Added Stage 9 architecture image cards with lazy texture loading.
+- Added Stage 9 architecture schematic cards.
 - Added standalone Vector House and Silver Triangle deep-dive pages.
 - Added independent layer toggles for:
   - original sketch
@@ -54,7 +52,7 @@
 
 ## TODO(claude)
 
-- `index.html`: verify every Stage 9 architecture photo caption, date, and project label before publication.
+- `index.html`: verify every Stage 9 architecture caption, date, and project label before publication.
 - Confirm whether "Rhombicube" should be the public-facing standard name or whether Gregg prefers another term.
 - Confirm whether the Stage 6 silver ratio framing should remain an investigation or can be stated more directly.
 - Confirm whether the Stage 10 XYZ Cartesian expansion should stay labelled as hypothesis.
@@ -71,7 +69,7 @@ Tested with Playwright against a temporary local Node static server:
 
 - `index.html` loads with no browser console errors or warnings.
 - Clicked through to Stage 9; Stage 9 caption and toggles are visible.
-- Architecture image requests all returned `200 OK`.
+- Stage 9 architecture schematics render without raster image requests.
 - `cube-diagonals.html`, `lost-triangle.html`, `rhombic-dodecahedron.html`, and `poster/poster.html` all load with clean browser consoles.
 - `vector-house.html` and `silver-triangle.html` load as standalone interactive deep dives with clean browser consoles.
 - Desktop and mobile screenshots were captured during QA and visually inspected.
