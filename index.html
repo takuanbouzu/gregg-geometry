@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
-<meta name="theme-color" content="#080c12"/>
+<meta name="theme-color" content="#ECE4D2"/>
 <title>Gregg Fleishman — The Geometry Lesson</title>
 <link rel="icon" href="data:,">
 <style>
 :root{
-  --bg-top:#0d1726; --bg-mid:#0a0f18; --bg-bot:#05080e;
-  --panel:rgba(10,15,24,.72); --panel-bd:rgba(255,255,255,.12);
-  --tx:rgba(255,255,255,.92); --tx-dim:rgba(255,255,255,.46); --tx-faint:rgba(255,255,255,.26);
-  --chip:rgba(255,255,255,.08); --accent:#4d88ff;
+  --bg-top:#F4EFE1; --bg-mid:#ECE4D2; --bg-bot:#DED3BC;
+  --panel:rgba(255,250,240,.84); --panel-bd:rgba(20,20,20,.14);
+  --tx:rgba(20,20,20,.92); --tx-dim:rgba(20,20,20,.55); --tx-faint:rgba(20,20,20,.34);
+  --chip:rgba(20,20,20,.05); --accent:#1F9E94;
   --font:Inter,-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Arial,sans-serif;
   --mono:ui-monospace,'SF Mono',Menlo,monospace;
 }
@@ -25,16 +25,28 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 #infobox .it{font-size:12.5px;font-weight:600;color:var(--tx);margin-bottom:5px;letter-spacing:-.01em;}
 #infobox .ib{font-size:12px;line-height:1.5;color:var(--tx-dim);}
 
-/* ---- shared site nav ---- */
-#gfnav{position:fixed;top:0;left:0;right:0;z-index:70;min-height:46px;display:flex;justify-content:center;align-items:center;gap:6px;padding:7px 16px;background:rgba(6,9,14,.84);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-bottom:.5px solid rgba(255,255,255,.08);}
-#gfnav span{font-size:10px;font-weight:600;color:rgba(255,255,255,.34);letter-spacing:.11em;text-transform:uppercase;margin-right:4px;white-space:nowrap;}
-#gfnav a{font-size:11.5px;font-weight:560;text-decoration:none;padding:5px 10px;border-radius:8px;transition:all .18s;white-space:nowrap;}
-#gfnav a.active{background:rgba(255,255,255,.14);color:rgba(255,255,255,.94);border:.5px solid rgba(255,255,255,.24);}
-#gfnav a.inactive{background:rgba(255,255,255,.045);color:rgba(255,255,255,.54);border:.5px solid rgba(255,255,255,.1);}
-#gfnav a:hover{color:rgba(255,255,255,.92);background:rgba(255,255,255,.11);}
+/* ---- icon buttons (menu / gear share a look) ---- */
+.iconbtn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;color:var(--tx-dim);background:var(--chip);border:.5px solid var(--panel-bd);border-radius:18px;cursor:pointer;transition:all .2s;}
+.iconbtn:hover,.iconbtn.open{color:var(--tx);background:rgba(127,127,127,.18);border-color:var(--panel-bd);}
+.iconbtn svg{display:block;}
+
+/* ---- page menu (hamburger dropdown) ---- */
+#pagemenu{position:fixed;top:52px;left:16px;z-index:72;width:214px;background:var(--panel);border:.5px solid var(--panel-bd);border-radius:8px;padding:11px 11px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 14px 40px rgba(0,0,0,.22);opacity:0;transform:translateY(-8px) scale(.98);transform-origin:top left;pointer-events:none;transition:all .2s ease;}
+#pagemenu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+#pagemenu h4{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-faint);margin:2px 5px 8px;}
+#pagemenu a{display:block;font-size:13px;font-weight:540;text-decoration:none;color:var(--tx-dim);padding:7px 9px;border-radius:7px;transition:all .16s;letter-spacing:-.005em;}
+#pagemenu a.active{color:var(--tx);background:rgba(127,127,127,.16);}
+#pagemenu a:hover{color:var(--tx);background:rgba(127,127,127,.1);}
+
+/* ---- view switcher (right rail) ---- */
+#views{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:25;display:flex;flex-direction:column;gap:4px;background:var(--panel);border:.5px solid var(--panel-bd);border-radius:8px;padding:8px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
+#views h4{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--tx-faint);text-align:center;margin:1px 0 5px;}
+#views button{font:inherit;font-size:10.5px;font-weight:560;letter-spacing:.01em;color:var(--tx-dim);background:var(--chip);border:.5px solid var(--panel-bd);border-radius:7px;padding:7px 9px;min-width:88px;cursor:pointer;transition:all .18s;text-align:center;}
+#views button:hover{color:var(--tx);}
+#views button.on{background:var(--accent);border-color:var(--accent);color:#fff;}
 
 /* ---- top bar ---- */
-#top{position:fixed;top:46px;left:0;right:0;z-index:40;height:52px;display:flex;align-items:center;
+#top{position:fixed;top:0;left:0;right:0;z-index:73;height:52px;display:flex;align-items:center;
   gap:14px;padding:0 16px;background:linear-gradient(to bottom,rgba(0,0,0,.42),rgba(0,0,0,0));}
 #brand{font-size:12px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--tx-dim);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -46,7 +58,7 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 #gear svg{display:block;}
 
 /* ---- settings dropdown ---- */
-#settings{position:fixed;top:96px;right:16px;z-index:45;width:236px;background:var(--panel);
+#settings{position:fixed;top:50px;right:16px;z-index:74;width:236px;background:var(--panel);
   border:.5px solid var(--panel-bd);border-radius:8px;padding:15px 16px;
   -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 14px 40px rgba(0,0,0,.32);
   opacity:0;transform:translateY(-8px) scale(.98);transform-origin:top right;pointer-events:none;transition:all .2s ease;}
@@ -69,7 +81,7 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 .sw.on .kn{left:20px;}
 
 /* ---- stage caption (center top) ---- */
-#cap{position:fixed;top:108px;left:50%;transform:translateX(-50%);z-index:25;text-align:center;
+#cap{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:25;text-align:center;
   pointer-events:none;max-width:min(620px,86vw);transition:opacity .5s ease;}
 #capnum{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:600;}
 #captitle{font-size:clamp(17px,4.4vw,23px);font-weight:600;letter-spacing:-.01em;margin-top:3px;}
@@ -116,11 +128,10 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 
 /* ---- responsive ---- */
 @media(max-width:720px){
-  #gfnav{justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-left:10px;padding-right:10px;}
-  #gfnav span{font-size:10px;}
-  #gfnav a{font-size:11px;padding:5px 10px;}
   #layers{width:150px;left:10px;padding:11px 11px;}
-  #cap{top:102px;}
+  #views{padding:6px;gap:3px;}
+  #views button{min-width:0;font-size:10px;padding:6px 8px;}
+  #cap{top:58px;}
   #stagelabel{min-width:70px;font-size:10px;}
   #brand{font-size:10px;letter-spacing:.08em;}
   #rail{gap:3px;padding:6px 8px;bottom:calc(16px + env(safe-area-inset-bottom));}
@@ -128,13 +139,17 @@ body.minimal #capbody,body.minimal #brand{display:none;}
   .dot{width:8px;height:8px;margin:0 1px;}
 }
 @media(max-height:560px){
-  #cap{top:96px;}
+  #cap{top:52px;}
   #capbody{display:none;}
   #layers{max-height:80vh;top:52%;}
+  #views{top:auto;bottom:78px;}
   #hint{display:none;}
 }
 @media(max-width:430px){
-  #cap{top:98px;max-width:92vw;}
+  #cap{top:54px;max-width:92vw;}
+  #views{right:8px;padding:5px;gap:3px;}
+  #views button{min-width:0;font-size:9.5px;padding:6px 7px;}
+  #views h4{display:none;}
   #captitle{font-size:18px;}
   #capbody{font-size:11.5px;line-height:1.45;margin-top:5px;}
   #layers{top:auto;bottom:78px;transform:none;max-height:38vh;width:140px;padding:10px 11px;}
@@ -145,21 +160,14 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 </style>
 </head>
 <body>
-<div id="gfnav">
-  <span>Gregg Fleishman</span>
-  <a href="index.html" class="active">Geometry Lesson</a>
-  <a href="cube-diagonals.html" class="inactive">Cube Diagonals</a>
-  <a href="lost-triangle.html" class="inactive">Lost Triangle</a>
-  <a href="rhombic-dodecahedron.html" class="inactive">Rhombic Dodecahedron</a>
-  <a href="vector-house.html" class="inactive">Vector House</a>
-  <a href="silver-triangle.html" class="inactive">Silver Triangle</a>
-  <a href="poster/poster.html" class="inactive">Poster</a>
-</div>
 <div id="bg"></div>
 <canvas id="c"></canvas>
 <div id="infobox"><div class="it"></div><div class="ib"></div></div>
 
 <div id="top">
+  <button id="menu" class="iconbtn" aria-label="Pages menu">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
   <div id="brand"><b>GREGG FLEISHMAN</b> · The Geometry Lesson</div>
   <button id="gear" aria-label="Settings">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -177,6 +185,25 @@ body.minimal #capbody,body.minimal #brand{display:none;}
     <div class="srow"><label>Sketch opacity</label><input id="sketchOp" type="range" min="0" max="100" value="62"/></div>
     <div class="srow"><label>Auto-rotate</label><div id="autorot" class="sw on"><div class="kn"></div></div></div>
   </div>
+</div>
+
+<div id="pagemenu">
+  <h4>Explore</h4>
+  <a href="index.html" class="active">Geometry Lesson</a>
+  <a href="cube-diagonals.html">Cube Diagonals</a>
+  <a href="lost-triangle.html">Lost Triangle</a>
+  <a href="rhombic-dodecahedron.html">Rhombic Dodecahedron</a>
+  <a href="vector-house.html">Vector House</a>
+  <a href="silver-triangle.html">Silver Triangle</a>
+  <a href="poster/poster.html">Poster</a>
+</div>
+
+<div id="views">
+  <h4>View</h4>
+  <button data-view="persp" class="on">Perspective</button>
+  <button data-view="top">Top · Bottom</button>
+  <button data-view="front">Front · Back</button>
+  <button data-view="side">Left · Right</button>
 </div>
 
 <div id="cap">
@@ -212,18 +239,18 @@ const THEMES = {
     grid:0x16263c, ghost:0x33507a, ink:0xdce6f5,
     unit:0x4d88ff, face:0xff8c3a, space:0xff3366, tri:0x3effa0, angle:0xffcc55,
     xA:0xff5555, yA:0x55ff77, zA:0x4d88ff, sketch:0.62, minimal:false },
-  paper:{ label:'Paper Sketch', sub:'Off-white · pencil feel',
-    bg:['#fffaf0','#f6f2e8','#e7ddca'], fog:0xefe9da, fogD:0.040,
-    grid:0xd9d2c3, ghost:0x9c9484, ink:0x1b1b1b,
-    unit:0x1769ff, face:0xe2811f, space:0xd9295f, tri:0x1f9c63, angle:0x927400,
-    xA:0xd9295f, yA:0x1f9c63, zA:0x1769ff, sketch:0.80, minimal:false },
+  paper:{ label:'Editorial Paper', sub:'Warm cream · diagram ink',
+    bg:['#F4EFE1','#ECE4D2','#DED3BC'], fog:0xECE4D2, fogD:0.030,
+    grid:0xCEC6B2, ghost:0xB2A88F, ink:0x1A1A18,
+    unit:0x1F9E94, face:0xC0492B, space:0x2C3E91, tri:0x1FA85A, angle:0xB58A12,
+    xA:0xC0492B, yA:0x1FA85A, zA:0x2C3E91, sketch:0.82, minimal:false },
   present:{ label:'Presentation', sub:'Minimal · gallery display',
     bg:['#10131a','#0a0c11','#050608'], fog:0x080a0e, fogD:0.045,
     grid:0x1b1f29, ghost:0x46506a, ink:0xeef2f8,
     unit:0x7aa8ff, face:0xffb070, space:0xff6f90, tri:0x6cffb6, angle:0xffd87a,
     xA:0xff7a7a, yA:0x7aff9a, zA:0x7aa8ff, sketch:0.5, minimal:true }
 };
-let theme=THEMES.night, themeName='night';
+let theme=THEMES.paper, themeName='paper';
 
 /* ════════ RENDERER / SCENE ════════ */
 const canvas=document.getElementById('c');
@@ -364,13 +391,8 @@ let originRing=null;
 let sketchUserOp=0.62;
 // Pure generated linework: no raster sketch/photo texture in this build.
 const s1desc={t:'The proof, by hand',b:'Gregg traces 1 : √2 : √3 straight from the cube — legs 1 and √2, hypotenuse √3, so 1² + (√2)² = (√3)². Hover any line for its meaning.'};
-[
-  [new THREE.Vector3(-.7,-.32,-.015),new THREE.Vector3(1.55,-.24,-.015)],
-  [new THREE.Vector3(-.62,-.58,-.015),new THREE.Vector3(1.46,-.42,-.015)],
-  [new THREE.Vector3(.25,-.95,-.015),new THREE.Vector3(1.02,.55,-.015)],
-  [new THREE.Vector3(.0,.15,-.015),new THREE.Vector3(1.32,.84,-.015)],
-  [new THREE.Vector3(.48,-.18,-.015),new THREE.Vector3(.96,.76,-.015)]
-].forEach(function(seg){line(seg[0],seg[1],'ink',{stage:1,maxStage:1,layer:'sketch',maxOp:.22,overlay:true,desc:s1desc});});
+// Decorative "notebook scaffolding" segments removed per design review (read as random stray lines).
+// Only the meaningful proof triangle (O–A–B) and its measure labels remain at Stage 1.
 [[O,A],[A,B],[O,B]].forEach(function(seg){line(seg[0],seg[1],'ink',{stage:1,maxStage:1,layer:'sketch',maxOp:.5,grow:true,overlay:true,desc:s1desc});});
 triFill(O,A,B,'tri',{stage:1,maxStage:1,layer:'sketch',maxOp:.08,overlay:true,overlayOrder:1,desc:s1desc});
 label('35°?',new THREE.Vector3(-.45,-.43,.02),'ink',.1,{stage:1,maxStage:1,layer:'sketch',maxOp:.6});
@@ -526,25 +548,8 @@ let rd=null;
 /* ---- STAGE 9 — ARCHITECTURE (schematic linework + dihedral family) ---- */
 (function(){
   // Captions verified 2026-06-17 against Gregg_Master_Context_v2.
-  const cards=[
-    ['Otic Oasis','Burning Man 2011–2014',{t:'Otic Oasis (2011–2014)',b:'Pod + node hybrid of interlocking birch plywood, no metal fasteners. Five builds at Burning Man, 2011–2014. The rhombic-dodecahedron “pods” are this geometry at human scale.'}],
-    ['Temple of Whollyness','2013',{t:'Temple of Whollyness (2013)',b:'A 115-ft-square, 63-ft-tall pyramid of CNC-cut birch plywood, assembled in 15 days with no metal fasteners — only custom nodes and pins. The octahedral–tetrahedral space frame realised.'}],
-    ['Sky Portal X','2022–present',{t:'Sky Portal X (2022–)',b:'Slot-to-slot panels locked with a pin; panels meet at 90° to generate the cubic family of polyhedra. Gregg’s “building blocks of Infinite Architecture”.'}],
-    ['Satellite','Burning Man 2019',{t:'Satellite (pod)',b:'A pod structure — truncated rhombic-dodecahedron shells that snap together by hand. The original Satellite design became the basis for Otic Oasis and the Solar Village.'}],
-    ['Solar Stage','Wonderfruit',{t:'Solar Stage',b:'The pod + node system as a festival stage — Wonderfruit, Thailand, 2015–2019. Over 2,137 modular wood parts, raised in 48 hours by 9 people.'}],
-    ['Node Home','2018',{t:'Node Home (2018)',b:'A residential-scale version of the Otic / Temple system — same octahedral–tetrahedral geometry, module 20% smaller. Part of Gregg’s housing-crisis response.'}]
-  ];
-  const N=cards.length, R=1.95;
-  cards.forEach(function(c,i){
-    const ang=(i/N)*Math.PI*2;
-    const pos=new THREE.Vector3(CC.x+Math.cos(ang)*R, CC.y+Math.sin(ang)*R, 0.5+(i%2?0.55:-0.35));
-    const w=.62,h=.42;
-    const a=new THREE.Vector3(pos.x-w,pos.y,pos.z-h), b=new THREE.Vector3(pos.x+w,pos.y,pos.z-h), cc=new THREE.Vector3(pos.x+w,pos.y,pos.z+h), d=new THREE.Vector3(pos.x-w,pos.y,pos.z+h);
-    [[a,b],[b,cc],[cc,d],[d,a],[a,cc],[b,d]].forEach(function(seg){line(seg[0],seg[1],i%2?'unit':'face',{stage:9,layer:'arch',maxOp:.64,overlay:true,desc:c[2]});});
-    dot(pos,i%2?'unit':'face',.035,{stage:9,layer:'arch',maxOp:.9,overlay:true,desc:c[2]});
-    label(c[0],new THREE.Vector3(pos.x,pos.y,pos.z-.62),'ink',.108,{stage:9,layer:'arch',maxOp:.92});
-    label(c[1],new THREE.Vector3(pos.x,pos.y,pos.z-.79),'ghost',.08,{stage:9,layer:'arch',maxOp:.72});
-  });
+  // Stage 9 built-work "frame" cards removed per design review (read as floating orange/blue boxes).
+  // The built works remain named in the stage caption; the dihedral-family list stays below.
   const fam=[
     'Rhombic Dodecahedron — 120°',
     'Tetrahedron — 70.5°',
@@ -591,7 +596,6 @@ const LAYERS=[
   {key:'roottri',label:'Root triangles',on:true},
   {key:'rhombic',label:'Rhombic dodecahedron',on:true},
   {key:'dihedral',label:'Dihedral family',on:true},
-  {key:'arch',label:'Architecture',on:true},
   {key:'axes',label:'XYZ axes',on:false}
 ];
 const layerOn={}; LAYERS.forEach(function(l){layerOn[l.key]=l.on;});
@@ -615,7 +619,7 @@ document.addEventListener('click',function(e){if(settingsOpen&&!settings.contain
 const modelist=document.getElementById('modelist');
 Object.keys(THEMES).forEach(function(name){
   const t=THEMES[name];
-  const row=document.createElement('div');row.className='opt'+(name==='night'?' on':'');
+  const row=document.createElement('div');row.className='opt'+(name==='paper'?' on':'');
   row.innerHTML='<div class="rad"></div><div class="txt">'+t.label+'<span class="sub">'+t.sub+'</span></div>';
   row.onclick=function(){applyTheme(name);};
   modelist.appendChild(row);t._el=row;
@@ -676,7 +680,7 @@ function setStage(n){
   camTgt={az:s.cam.az,el:s.cam.el,r:s.cam.r};
   items.forEach(function(it){if(it.userData.grow&&it.userData.stage===n)it.userData.prog=0;});
   Array.from(dots.children).forEach(function(d,i){d.classList.toggle('on',i===n-1);});
-  const avail={sketch:1,construction:2,labels:2,ratios:2,angles:2,cube:3,roottri:4,rhombic:8,dihedral:9,arch:9,axes:5};
+  const avail={sketch:1,construction:2,labels:2,ratios:2,angles:2,cube:3,roottri:4,rhombic:8,dihedral:9,axes:5};
   LAYERS.forEach(function(l){layerEls[l.key].classList.toggle('disabled',stage<avail[l.key]);});
 }
 document.getElementById('next').onclick=function(){setStage(stage+1);};
@@ -699,7 +703,7 @@ function applyTheme(name){
   if(name==='paper'){
     r.setProperty('--panel','rgba(255,250,240,.84)');r.setProperty('--panel-bd','rgba(20,20,20,.14)');
     r.setProperty('--tx','rgba(20,20,20,.92)');r.setProperty('--tx-dim','rgba(20,20,20,.55)');
-    r.setProperty('--tx-faint','rgba(20,20,20,.34)');r.setProperty('--chip','rgba(20,20,20,.05)');r.setProperty('--accent','#1769ff');
+    r.setProperty('--tx-faint','rgba(20,20,20,.34)');r.setProperty('--chip','rgba(20,20,20,.05)');r.setProperty('--accent','#1F9E94');
   }else{
     r.setProperty('--panel','rgba(10,15,24,.74)');r.setProperty('--panel-bd','rgba(255,255,255,.12)');
     r.setProperty('--tx','rgba(255,255,255,.92)');r.setProperty('--tx-dim','rgba(255,255,255,.46)');
@@ -833,8 +837,30 @@ function animate(){
   renderer.render(scene,camera);
 }
 
+/* ════════ PAGE MENU (hamburger) ════════ */
+const menuBtn=document.getElementById('menu'), pagemenu=document.getElementById('pagemenu');
+let menuOpen=false;
+function setMenu(o){menuOpen=o;pagemenu.classList.toggle('open',o);menuBtn.classList.toggle('open',o);}
+menuBtn.onclick=function(e){e.stopPropagation();setMenu(!menuOpen);};
+document.addEventListener('click',function(e){if(menuOpen&&!pagemenu.contains(e.target)&&e.target!==menuBtn)setMenu(false);});
+
+/* ════════ VIEW SWITCHER (orthographic-style camera presets) ════════ */
+const VIEWS={
+  persp:{az:-2.10,el:0.52,r:5.0},   // 3/4 perspective
+  top:  {az:-1.5708,el:1.5,r:4.7},  // top · bottom (look down Z)
+  front:{az:-1.5708,el:0.05,r:4.7}, // front · back (look along Y)
+  side: {az:0.0,el:0.05,r:4.7}      // left · right (look along X)
+};
+const viewBtns=Array.prototype.slice.call(document.querySelectorAll('#views button'));
+viewBtns.forEach(function(b){b.onclick=function(){
+  const v=VIEWS[b.getAttribute('data-view')];if(!v)return;
+  camTgt={az:v.az,el:v.el,r:v.r};userInteracted=true;
+  viewBtns.forEach(function(x){x.classList.remove('on');});b.classList.add('on');
+  killHint();
+};});
+
 /* ════════ INIT ════════ */
-applyTheme('night');
+applyTheme('paper');
 setStage(1);
 animate();
 
