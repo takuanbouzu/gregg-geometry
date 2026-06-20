@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Three triangles. Three consecutive square roots. The geometric foundation of Gregg Fleishman's life work.">
+<title>The Fleishman Sequence — Gregg Fleishman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:   #06080C;
+    --fg:   #EBE6DC;
+    --sub:  #475060;
+    --dim:  #141824;
+    --edge: #1E2433;
+    --t1:   #5B9BD5;
+    --t2:   #E8A825;
+    --t3:   #C85A38;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Page header ─────────────────────────────────────────────────────── */
+  #page-header {
+    padding: 32px 40px 0;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* ── 2D canvas section ───────────────────────────────────────────────── */
+  #app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 0;
+    width: 100%;
+    max-width: 1060px;
+  }
+
+  #main-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0;
+    width: 1000px;
+  }
+
+  #canvas-wrap {
+    flex: 0 0 700px;
+    position: relative;
+  }
+
+  canvas {
+    display: block;
+    background: var(--bg);
+  }
+
+  #info-panel {
+    flex: 0 0 300px;
+    height: 430px;
+    background: rgba(14,18,28,0.9);
+    border: 1px solid var(--edge);
+    border-left: none;
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  #info-panel::-webkit-scrollbar {
+    width: 4px;
+  }
+  #info-panel::-webkit-scrollbar-track { background: transparent; }
+  #info-panel::-webkit-scrollbar-thumb { background: var(--edge); border-radius: 2px; }
+
+  .info-step-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--sub);
+    text-transform: uppercase;
+  }
+
+  .info-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.4;
+  }
+
+  .info-ratio {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--sub);
+    line-height: 1.6;
+  }
+
+  .info-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--fg);
+    line-height: 1.7;
+    opacity: 0.85;
+  }
+
+  .info-body p { margin-bottom: 10px; }
+  .info-body p:last-child { margin-bottom: 0; }
+
+  .info-code {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--sub);
+    line-height: 1.8;
+    padding: 10px 12px;
+    background: var(--dim);
+    border-left: 2px solid var(--edge);
+    white-space: pre;
+  }
+
+  .info-cta {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--t2);
+    color: var(--t2);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .info-cta:hover {
+    background: var(--t2);
+    color: var(--bg);
+  }
+
+  #nav-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 1000px;
+    padding: 20px 0;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--edge);
+    color: var(--sub);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .nav-btn:hover:not(:disabled) {
+    border-color: var(--fg);
+    color: var(--fg);
+  }
+  .nav-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+
+  #dots {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid var(--sub);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .dot.active {
+    background: var(--fg);
+    border-color: var(--fg);
+  }
+
+  /* ── 3D section container ────────────────────────────────────────────── */
+  #scene-3d {
+    width: 100%;
+    background: #06080C;
+    border-top: 1px solid #1E2433;
+    padding: 32px 40px 40px;
+  }
+
+  .color-t1 { color: var(--t1); }
+  .color-t2 { color: var(--t2); }
+  .color-t3 { color: var(--t3); }
+
+  /* ── Page footer ─────────────────────────────────────────────────────── */
+  #page-footer {
+    width: 100%;
+    padding: 40px;
+    text-align: center;
+    border-top: 1px solid #1E2433;
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Page header ──────────────────────────────────────────────────────── -->
+<header id="page-header">
+  <p style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.15em;color:#475060;text-transform:uppercase;margin:0 0 8px;">
+    Gregg Fleishman Legacy Project
+  </p>
+  <h1 style="font-family:'Space Mono',monospace;font-size:22px;color:#EBE6DC;margin:0;font-weight:400;letter-spacing:.05em;">
+    The Fleishman Sequence
+  </h1>
+</header>
+
+<!-- ── 2D interactive canvas section ────────────────────────────────────── -->
+<div id="app">
+  <div id="main-row">
+    <div id="canvas-wrap">
+      <canvas id="c" width="700" height="430"></canvas>
+    </div>
+    <div id="info-panel">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <div id="nav-row">
+    <button class="nav-btn" id="btn-prev">← Prev</button>
+    <div id="dots"></div>
+    <button class="nav-btn" id="btn-next">Next →</button>
+  </div>
+</div>
+
+<!-- ── 3D scene section ──────────────────────────────────────────────────── -->
+<div id="scene-3d">
+
+  <!-- 3D scoped styles -->
+  <style>
+    /* ===== Scoped styles for the 3D section ===== */
+    #fls-3d-wrap {
+      --fls-bg:   #06080C;
+      --fls-fg:   #EBE6DC;
+      --fls-sub:  #475060;
+      --fls-dim:  #141824;
+      --fls-edge: #1E2433;
+      --fls-t1:   #5B9BD5;
+      --fls-t2:   #E8A825;
+      --fls-t3:   #C85A38;
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      color: var(--fls-fg);
+      font-family: 'Space Mono', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      box-sizing: border-box;
+    }
+    #fls-3d-wrap *, #fls-3d-wrap *::before, #fls-3d-wrap *::after { box-sizing: border-box; }
+
+    #threejs-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    #threejs-controls .phase-btn {
+      flex: 1 1 auto;
+      min-width: 180px;
+      padding: 10px 14px;
+      background: var(--fls-dim);
+      color: var(--fls-sub);
+      border: 1px solid var(--fls-edge);
+      border-radius: 4px;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+    #threejs-controls .phase-btn:hover { color: var(--fls-fg); border-color: var(--fls-sub); }
+    #threejs-controls .phase-btn.active {
+      background: #0E1320;
+      color: var(--fls-fg);
+      border-color: var(--fls-t2);
+      box-shadow: inset 0 0 0 1px rgba(232,168,37,0.25);
+    }
+
+    #threejs-root {
+      width: 100%;
+      height: 500px;
+      position: relative;
+      background: linear-gradient(180deg, rgba(20,24,36,0.35) 0%, rgba(6,8,12,0.0) 100%);
+      border: 1px solid var(--fls-edge);
+      border-radius: 6px;
+      overflow: hidden;
+      touch-action: none;
+    }
+    #threejs-root canvas { display: block; }
+
+    /* Sub-controls overlaid inside the canvas area (phase-specific buttons) */
+    .fls-subctrl {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 5;
+    }
+    .fls-subctrl button {
+      padding: 6px 10px;
+      background: rgba(14,19,32,0.82);
+      color: var(--fls-fg);
+      border: 1px solid var(--fls-edge);
+      border-radius: 4px;
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: border-color 0.16s ease, color 0.16s ease;
+    }
+    .fls-subctrl button:hover { border-color: var(--fls-t2); }
+    .fls-subctrl button.on { border-color: var(--fls-t1); color: var(--fls-t1); }
+
+    .fls-hint {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      color: var(--fls-sub);
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .fls-phase-info {
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--fls-dim);
+      border: 1px solid var(--fls-edge);
+      border-left: 3px solid var(--fls-t2);
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--fls-fg);
+    }
+    .fls-phase-info .phase-info-title {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fls-t2);
+      margin-bottom: 6px;
+    }
+  </style>
+
+  <!-- 3D DOM -->
+  <div id="fls-3d-wrap">
+    <div id="threejs-controls">
+      <button class="phase-btn active" data-phase="A">Phase A — Lost Triangle</button>
+      <button class="phase-btn" data-phase="B">Phase B — Rhombic Dodecahedron</button>
+      <button class="phase-btn" data-phase="C">Phase C — Space Filling</button>
+    </div>
+
+    <div id="threejs-root">
+      <!-- Phase B sub-controls -->
+      <div class="fls-subctrl" id="fls-subctrl-B" style="display:none;">
+        <button id="fls-b-animate">Animate ▶</button>
+        <button id="fls-b-square">Square view</button>
+        <button id="fls-b-hex">Hex view</button>
+      </div>
+      <!-- Phase C sub-controls -->
+      <div class="fls-subctrl" id="fls-subctrl-C" style="display:none;">
+        <button id="fls-c-lattice">Show cube lattice</button>
+      </div>
+      <div class="fls-hint">Drag to orbit · scroll to zoom</div>
+    </div>
+
+    <div class="fls-phase-info" id="phase-info-text"></div>
+  </div>
+
+</div>
+
+<!-- ── Page footer ───────────────────────────────────────────────────────── -->
+<footer id="page-footer">
+  <p style="font-family:'Space Mono',monospace;font-size:11px;color:#475060;letter-spacing:.1em;">
+    © Gregg Fleishman · greggfleishman.com
+  </p>
+</footer>
+
+<!-- ── 2D canvas script ──────────────────────────────────────────────────── -->
+<script>
+// ─── CONSTANTS ───────────────────────────────────────────────────────────────
+const S2 = Math.sqrt(2);
+const S3 = Math.sqrt(3);
+const ANGLE_A = Math.atan(1 / S2);           // ≈ 35.264°
+const ANGLE_B = Math.PI / 2 - ANGLE_A;       // ≈ 54.736°
+const U  = 120;                               // 1 unit = 120px
+const DURATION = 900;                         // ms per step
+const TOTAL_STEPS = 6;
+
+const P = {
+  bg:   '#06080C',
+  fg:   '#EBE6DC',
+  sub:  '#475060',
+  dim:  '#141824',
+  edge: '#1E2433',
+  t1:   '#5B9BD5',
+  t2:   '#E8A825',
+  t3:   '#C85A38',
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let step     = 0;
+let progress = 1;
+let raf      = null;
+
+// ─── CANVAS SETUP ─────────────────────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+// ─── EASING ──────────────────────────────────────────────────────────────────
+function ease(t) {
+  return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+}
+
+// ─── ISOMETRIC PROJECTION ─────────────────────────────────────────────────────
+const C30 = Math.cos(Math.PI / 6);  // √3/2
+const S30 = Math.sin(Math.PI / 6);  // 0.5
+
+function iso(x, y, z, cx, cy, E) {
+  return [
+    cx + (x - z) * E * C30,
+    cy - y * E + (x + z) * E * S30
+  ];
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+
+// Map t∈[a,b] → 0..1, clamped
+function range(t, a, b) {
+  return Math.max(0, Math.min(1, (t - a) / (b - a)));
+}
+
+// Interpolate along a line from (x1,y1) to (x2,y2) with progress p
+function lerpPt(x1, y1, x2, y2, p) {
+  return [x1 + (x2 - x1) * p, y1 + (y2 - y1) * p];
+}
+
+// Draw a partial line (0→1 animates the stroke)
+function drawLine(x1, y1, x2, y2, p, color, lw) {
+  if (p <= 0) return;
+  const [ex, ey] = lerpPt(x1, y1, x2, y2, Math.min(p, 1));
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(ex, ey);
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = lw;
+  ctx.stroke();
+}
+
+// Angle arc at vertex (cx,cy), from angle a1 to a2, radius r
+function drawAngleArc(cx, cy, r, a1, a2, color) {
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, a1, a2);
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = 1;
+  ctx.stroke();
+}
+
+// Right angle mark at a corner; dir1 and dir2 are unit vectors of the two legs
+function drawRightAngle(cx, cy, d1x, d1y, d2x, d2y, s, color) {
+  const p1x = cx + d1x * s;
+  const p1y = cy + d1y * s;
+  const p2x = cx + d2x * s;
+  const p2y = cy + d2y * s;
+  const pmx = cx + (d1x + d2x) * s;
+  const pmy = cy + (d1y + d2y) * s;
+  ctx.beginPath();
+  ctx.moveTo(p1x, p1y);
+  ctx.lineTo(pmx, pmy);
+  ctx.lineTo(p2x, p2y);
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = 1.5;
+  ctx.stroke();
+}
+
+// Centered text with optional opacity
+function label(text, x, y, font, color, alpha, align) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.font        = font;
+  ctx.fillStyle   = color;
+  ctx.textAlign   = align || 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+// Draw full outlined+filled triangle
+function drawTriangle(pts, fillColor, fillAlpha, strokeColor, strokeWidth) {
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  ctx.lineTo(pts[1][0], pts[1][1]);
+  ctx.lineTo(pts[2][0], pts[2][1]);
+  ctx.closePath();
+  if (fillColor) {
+    ctx.fillStyle   = fillColor;
+    ctx.globalAlpha = fillAlpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+  if (strokeColor) {
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth   = strokeWidth;
+    ctx.stroke();
+  }
+}
+
+// Midpoint label along a line segment, offset perpendicularly
+function midLabel(x1, y1, x2, y2, text, offset, color, alpha, font) {
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const nx = -dy / len * offset;
+  const ny =  dx / len * offset;
+  label(text, mx + nx, my + ny, font || 'italic 13px "Space Mono",monospace', color, alpha);
+}
+
+// ─── STEP 0: INTRO ────────────────────────────────────────────────────────────
+function drawStep0(p) {
+  const cx = 350, cy = 215;
+  const alpha = ease(p);
+
+  // Ghost triangles fanned from shared vertex bottom-left
+  const ax = 185, ay = 340;   // shared right-angle vertex
+  const top = [ax, ay - U];   // shared unit vertical top
+
+  // T1: sides 1,1,√2
+  const b1 = [ax + U, ay];
+  // T2: sides 1,√2,√3
+  const b2 = [ax + U * S2, ay];
+  // T3: sides 1,√3,2
+  const b3 = [ax + U * S3, ay];
+
+  ctx.save();
+  ctx.globalAlpha = 0.18 * alpha;
+
+  // T3 (outermost, behind)
+  ctx.beginPath();
+  ctx.moveTo(ax, ay); ctx.lineTo(top[0], top[1]); ctx.lineTo(b3[0], b3[1]); ctx.closePath();
+  ctx.fillStyle = P.t3; ctx.fill();
+
+  // T2
+  ctx.beginPath();
+  ctx.moveTo(ax, ay); ctx.lineTo(top[0], top[1]); ctx.lineTo(b2[0], b2[1]); ctx.closePath();
+  ctx.fillStyle = P.t2; ctx.fill();
+
+  // T1
+  ctx.beginPath();
+  ctx.moveTo(ax, ay); ctx.lineTo(top[0], top[1]); ctx.lineTo(b1[0], b1[1]); ctx.closePath();
+  ctx.fillStyle = P.t1; ctx.fill();
+
+  ctx.globalAlpha = 0.28 * alpha;
+  // Outline T3
+  ctx.beginPath();
+  ctx.moveTo(ax, ay); ctx.lineTo(top[0], top[1]); ctx.lineTo(b3[0], b3[1]); ctx.closePath();
+  ctx.strokeStyle = P.t3; ctx.lineWidth = 1.5; ctx.stroke();
+  // Outline T2
+  ctx.beginPath();
+  ctx.moveTo(ax, ay); ctx.lineTo(top[0], top[1]); ctx.lineTo(b2[0], b2[1]); ctx.closePath();
+  ctx.strokeStyle = P.t2; ctx.lineWidth = 1.5; ctx.stroke();
+  // Outline T1
+  ctx.beginPath();
+  ctx.moveTo(ax, ay); ctx.lineTo(top[0], top[1]); ctx.lineTo(b1[0], b1[1]); ctx.closePath();
+  ctx.strokeStyle = P.t1; ctx.lineWidth = 1.5; ctx.stroke();
+
+  ctx.restore();
+
+  // Center text
+  ctx.save();
+  ctx.globalAlpha = alpha;
+
+  ctx.font      = 'bold 22px "Space Mono",monospace';
+  ctx.fillStyle = P.fg;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('THE FLEISHMAN SEQUENCE', cx, cy - 26);
+
+  ctx.font      = '300 14px Inter,sans-serif';
+  ctx.fillStyle = P.sub;
+  ctx.fillText('Three triangles. Three consecutive square roots.', cx, cy + 8);
+
+  // Ratio labels
+  const rY = cy + 38;
+
+  // Re-layout centered trio
+  const trioW = 310;
+  const t1x = cx - trioW/2 + 42;
+  const t2x = cx;
+  const t3x = cx + trioW/2 - 42;
+
+  ctx.font = '400 11px "Space Mono",monospace';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = P.t1; ctx.fillText('1 : 1 : √2',  t1x, rY);
+  ctx.fillStyle = P.sub; ctx.fillText('·', (t1x+t2x)/2+4, rY);
+  ctx.fillStyle = P.t2; ctx.fillText('1 : √2 : √3', t2x + 8, rY);
+  ctx.fillStyle = P.sub; ctx.fillText('·', (t2x+t3x)/2+12, rY);
+  ctx.fillStyle = P.t3; ctx.fillText('1 : √3 : 2',  t3x + 16, rY);
+
+  ctx.restore();
+}
+
+// ─── STEP 1: TRIANGLE I — SQUARE DIAGONAL ────────────────────────────────────
+function drawStep1(p) {
+  const cx = 350, cy = 215;
+  const half = U / 2;
+
+  // Square corners (unit square centered on canvas center)
+  const A = [cx - half, cy + half];  // bottom-left
+  const B = [cx + half, cy + half];  // bottom-right
+  const C = [cx + half, cy - half];  // top-right
+  const D = [cx - half, cy - half];  // top-left
+
+  // p 0→0.25: draw square edges
+  const pSquare = range(p, 0, 0.25);
+  if (pSquare > 0) {
+    ctx.setLineDash([2, 0]);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = P.edge;
+    // Draw 4 edges progressively
+    const edgesP = Math.min(pSquare * 4, 4);
+    const edges = [
+      [A, B], [B, C], [C, D], [D, A]
+    ];
+    for (let i = 0; i < 4; i++) {
+      const ep = Math.max(0, Math.min(1, edgesP - i));
+      if (ep > 0) {
+        const [ex, ey] = lerpPt(edges[i][0][0], edges[i][0][1], edges[i][1][0], edges[i][1][1], ep);
+        ctx.beginPath();
+        ctx.moveTo(edges[i][0][0], edges[i][0][1]);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // p 0.25→0.55: diagonal A→C
+  const pDiag = range(p, 0.25, 0.55);
+  if (pDiag > 0) {
+    ctx.setLineDash([]);
+    drawLine(A[0], A[1], C[0], C[1], pDiag, P.t1, 2);
+  }
+
+  // p 0.55→0.75: fill lower-left triangle (A, D, C)
+  const pFill = range(p, 0.55, 0.75);
+  if (pFill > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.15 * pFill;
+    ctx.fillStyle   = P.t1;
+    ctx.beginPath();
+    ctx.moveTo(A[0], A[1]);
+    ctx.lineTo(D[0], D[1]);
+    ctx.lineTo(C[0], C[1]);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = P.t1;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // p 0.75→1.0: labels
+  const pLabels = range(p, 0.75, 1.0);
+  if (pLabels > 0) {
+    const fa = pLabels;
+
+    // Side labels
+    label('1', A[0] - 16, (A[1] + D[1]) / 2, '400 13px "Space Mono",monospace', P.fg, fa);
+    label('1', (A[0] + B[0]) / 2, A[1] + 16, '400 13px "Space Mono",monospace', P.fg, fa);
+
+    // Hypotenuse label √2 along diagonal A→C, offset
+    midLabel(A[0], A[1], C[0], C[1], '√2', 18, P.t1, fa, '400 13px "Space Mono",monospace');
+
+    // Angle arcs
+    ctx.save();
+    ctx.globalAlpha = fa;
+    drawAngleArc(A[0], A[1], 20, -Math.PI/2, -Math.PI/4, P.sub);
+    label('45°', A[0] + 12, A[1] - 26, '400 10px "Space Mono",monospace', P.sub, fa);
+
+    drawAngleArc(D[0], D[1], 20, 0, Math.PI/2, P.sub);
+    label('45°', D[0] + 28, D[1] + 16, '400 10px "Space Mono",monospace', P.sub, fa);
+
+    // Right angle mark at D
+    drawRightAngle(D[0], D[1], 0, 1, 1, 0, 10, P.sub);
+
+    ctx.restore();
+  }
+
+  ctx.setLineDash([]);
+}
+
+// ─── STEP 2: TRIANGLE II — THE LOST TRIANGLE ──────────────────────────────────
+function drawStep2(p) {
+  // LEFT: large Lost Triangle
+  const ax = 120, ay = 340;     // right-angle vertex
+  const cx_t = 120, cy_t = 220; // C = top (short leg, length 1)
+  const bx = 120 + U * S2, by = 340; // B = right end (long leg, length √2)
+
+  // p 0→0.3: short leg C→A
+  const pL1 = range(p, 0, 0.3);
+  if (pL1 > 0) {
+    drawLine(cx_t, cy_t, ax, ay, pL1, P.t2, 2);
+  }
+
+  // p 0.3→0.6: long leg A→B
+  const pL2 = range(p, 0.3, 0.6);
+  if (pL2 > 0) {
+    drawLine(ax, ay, bx, by, pL2, P.t2, 2);
+  }
+
+  // p 0.6→0.8: hypotenuse B→C
+  const pL3 = range(p, 0.6, 0.8);
+  if (pL3 > 0) {
+    drawLine(bx, by, cx_t, cy_t, pL3, P.t2, 2);
+    // Fill on completion
+    ctx.save();
+    ctx.globalAlpha = 0.12 * pL3;
+    ctx.fillStyle   = P.t2;
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(bx, by);
+    ctx.lineTo(cx_t, cy_t);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // p 0.8→1.0: labels
+  const pLab = range(p, 0.8, 1.0);
+  if (pLab > 0) {
+    label('1', ax - 16, (ay + cy_t) / 2, '400 13px "Space Mono",monospace', P.fg, pLab);
+    label('√2', (ax + bx) / 2, ay + 18, '400 13px "Space Mono",monospace', P.fg, pLab);
+    midLabel(bx, by, cx_t, cy_t, '√3', 20, P.t2, pLab, '400 13px "Space Mono",monospace');
+
+    ctx.save();
+    ctx.globalAlpha = pLab;
+
+    drawRightAngle(ax, ay, 0, -1, 1, 0, 10, P.sub);
+
+    const angBC = Math.atan2(cy_t - by, cx_t - bx);
+    drawAngleArc(bx, by, 22, angBC, Math.PI, P.sub);
+    label('35.26°', bx - 36, by - 20, '400 9px "Space Mono",monospace', P.sub, pLab);
+
+    const angCB = Math.atan2(by - cy_t, bx - cx_t);
+    drawAngleArc(cx_t, cy_t, 22, Math.PI/2, angCB, P.sub);
+    label('54.74°', cx_t + 34, cy_t + 22, '400 9px "Space Mono",monospace', P.sub, pLab);
+
+    ctx.restore();
+  }
+
+  // RIGHT: isometric cube + lost triangle highlight
+  const pCube = range(p, 0.3, 1.0);
+  if (pCube > 0) {
+    const ccx = 530, ccy = 215, E = 55;
+
+    ctx.save();
+    ctx.globalAlpha = pCube;
+
+    // Draw cube wireframe
+    const verts = [];
+    for (let xi = 0; xi <= 1; xi++)
+      for (let yi = 0; yi <= 1; yi++)
+        for (let zi = 0; zi <= 1; zi++)
+          verts.push(iso(xi, yi, zi, ccx, ccy, E));
+
+    const vidx = (x, y, z) => x*4 + y*2 + z;
+
+    const edges = [
+      [0,0,0,1,0,0],[0,0,0,0,1,0],[0,0,0,0,0,1],
+      [1,0,0,1,1,0],[1,0,0,1,0,1],
+      [0,1,0,1,1,0],[0,1,0,0,1,1],
+      [0,0,1,1,0,1],[0,0,1,0,1,1],
+      [1,1,0,1,1,1],[1,0,1,1,1,1],[0,1,1,1,1,1]
+    ];
+
+    ctx.strokeStyle = P.edge;
+    ctx.lineWidth   = 1;
+    for (const [x1,y1,z1,x2,y2,z2] of edges) {
+      const p1 = iso(x1,y1,z1,ccx,ccy,E);
+      const p2 = iso(x2,y2,z2,ccx,ccy,E);
+      ctx.beginPath();
+      ctx.moveTo(p1[0], p1[1]);
+      ctx.lineTo(p2[0], p2[1]);
+      ctx.stroke();
+    }
+
+    const pHighlight = range(p, 0.5, 1.0);
+    if (pHighlight > 0) {
+      ctx.globalAlpha = pHighlight;
+      const ptCenter = iso(0.5, 0.5, 0.5, ccx, ccy, E);
+      const ptEdgeMid = iso(0.5, 1, 1, ccx, ccy, E);
+      const ptCorner  = iso(1, 1, 1, ccx, ccy, E);
+
+      ctx.beginPath();
+      ctx.moveTo(ptCenter[0], ptCenter[1]);
+      ctx.lineTo(ptEdgeMid[0], ptEdgeMid[1]);
+      ctx.lineTo(ptCorner[0], ptCorner[1]);
+      ctx.strokeStyle = P.t2;
+      ctx.lineWidth   = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = P.t2;
+      for (const pt of [ptCenter, ptEdgeMid, ptCorner]) {
+        ctx.beginPath();
+        ctx.arc(pt[0], pt[1], 3, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      label('"The Lost Triangle"', ccx, ccy + E * 1.8, '400 9px "Space Mono",monospace', P.sub, pHighlight);
+      label('hidden in every cube', ccx, ccy + E * 1.8 + 14, '400 9px "Space Mono",monospace', P.sub, pHighlight * 0.7);
+    }
+
+    ctx.restore();
+  }
+}
+
+// ─── STEP 3: TRIANGLE III — EQUILATERAL SPLIT ────────────────────────────────
+function drawStep3(p) {
+  const cx = 350, cy_base = 310;
+  const apex = [cx, cy_base - U * S3];     // top ≈ (350, 102)
+  const BL   = [cx - U, cy_base];          // bottom-left
+  const BR   = [cx + U, cy_base];          // bottom-right
+  const M    = [cx, cy_base];              // midpoint of base
+
+  // p 0→0.35: equilateral triangle ghost outline
+  const pEq = range(p, 0, 0.35);
+  if (pEq > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.4 * pEq;
+    ctx.strokeStyle = P.edge;
+    ctx.lineWidth   = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(BL[0], BL[1]);
+    ctx.lineTo(BR[0], BR[1]);
+    ctx.lineTo(apex[0], apex[1]);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // p 0.35→0.6: altitude line Apex→M (dashed)
+  const pAlt = range(p, 0.35, 0.6);
+  if (pAlt > 0) {
+    ctx.save();
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = P.sub;
+    ctx.lineWidth   = 1.5;
+    ctx.globalAlpha = pAlt;
+    const [ex, ey] = lerpPt(apex[0], apex[1], M[0], M[1], pAlt);
+    ctx.beginPath();
+    ctx.moveTo(apex[0], apex[1]);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+
+  // p 0.6→0.8: fill/outline left right-triangle (BL, M, apex)
+  const pFill = range(p, 0.6, 0.8);
+  if (pFill > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.15 * pFill;
+    ctx.fillStyle   = P.t3;
+    ctx.beginPath();
+    ctx.moveTo(BL[0], BL[1]);
+    ctx.lineTo(M[0], M[1]);
+    ctx.lineTo(apex[0], apex[1]);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = pFill;
+    ctx.strokeStyle = P.t3;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+
+    // Ghost right half
+    ctx.globalAlpha = 0.3 * pFill;
+    ctx.strokeStyle = P.edge;
+    ctx.lineWidth   = 1;
+    ctx.beginPath();
+    ctx.moveTo(BR[0], BR[1]);
+    ctx.lineTo(apex[0], apex[1]);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(BR[0], BR[1]);
+    ctx.lineTo(M[0], M[1]);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // p 0.8→1.0: labels
+  const pLab = range(p, 0.8, 1.0);
+  if (pLab > 0) {
+    label('1', (BL[0] + M[0]) / 2, BL[1] + 18, '400 13px "Space Mono",monospace', P.fg, pLab);
+    label('√3', M[0] - 18, (M[1] + apex[1]) / 2, '400 13px "Space Mono",monospace', P.fg, pLab);
+    midLabel(BL[0], BL[1], apex[0], apex[1], '2', 18, P.t3, pLab, '400 13px "Space Mono",monospace');
+    midLabel(BR[0], BR[1], apex[0], apex[1], '2', -18, P.edge, pLab * 0.3, '400 13px "Space Mono",monospace');
+
+    ctx.save();
+    ctx.globalAlpha = pLab;
+
+    const angBLApex = Math.atan2(apex[1]-BL[1], apex[0]-BL[0]);
+    drawAngleArc(BL[0], BL[1], 22, angBLApex, 0, P.sub);
+    label('60°', BL[0] + 28, BL[1] - 14, '400 10px "Space Mono",monospace', P.sub, pLab);
+
+    const angApexBL = Math.atan2(BL[1]-apex[1], BL[0]-apex[0]);
+    drawAngleArc(apex[0], apex[1], 22, Math.PI/2, angApexBL, P.sub);
+    label('30°', apex[0] - 32, apex[1] + 22, '400 10px "Space Mono",monospace', P.sub, pLab);
+
+    drawRightAngle(M[0], M[1], -1, 0, 0, -1, 10, P.sub);
+
+    ctx.restore();
+  }
+
+  ctx.setLineDash([]);
+}
+
+// ─── STEP 4: THE SEQUENCE — ALL THREE TOGETHER ───────────────────────────────
+function drawStep4(p) {
+  const A  = [155, 360];
+  const C  = [155, 240];
+  const B1 = [155 + U,           360];
+  const B2 = [155 + U * S2,      360];
+  const B3 = [155 + U * S3,      360];
+
+  // p 0→0.1: baseline A→B3 and unit leg C→A
+  const pBase = range(p, 0, 0.1);
+  if (pBase > 0) {
+    ctx.save();
+    ctx.globalAlpha = pBase;
+    ctx.strokeStyle = P.sub;
+    ctx.lineWidth   = 1;
+    ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B3[0] + 10, B3[1]); ctx.stroke();
+    ctx.strokeStyle = P.fg;
+    ctx.lineWidth   = 1.5;
+    ctx.beginPath(); ctx.moveTo(C[0], C[1]); ctx.lineTo(A[0], A[1]); ctx.stroke();
+    ctx.restore();
+  }
+
+  // p 0.1→0.35: Triangle III (outermost, draw first)
+  const pT3 = range(p, 0.1, 0.35);
+  if (pT3 > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.12 * pT3;
+    ctx.fillStyle = P.t3;
+    ctx.beginPath();
+    ctx.moveTo(C[0], C[1]); ctx.lineTo(A[0], A[1]); ctx.lineTo(B3[0], B3[1]); ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = pT3;
+    ctx.strokeStyle = P.t3;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // p 0.35→0.6: Triangle II
+  const pT2 = range(p, 0.35, 0.6);
+  if (pT2 > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.15 * pT2;
+    ctx.fillStyle = P.t2;
+    ctx.beginPath();
+    ctx.moveTo(C[0], C[1]); ctx.lineTo(A[0], A[1]); ctx.lineTo(B2[0], B2[1]); ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = pT2;
+    ctx.strokeStyle = P.t2;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // p 0.6→0.8: Triangle I (innermost)
+  const pT1 = range(p, 0.6, 0.8);
+  if (pT1 > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.20 * pT1;
+    ctx.fillStyle = P.t1;
+    ctx.beginPath();
+    ctx.moveTo(C[0], C[1]); ctx.lineTo(A[0], A[1]); ctx.lineTo(B1[0], B1[1]); ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = pT1;
+    ctx.strokeStyle = P.t1;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // p 0.8→1.0: all labels + insight box
+  const pLab = range(p, 0.8, 1.0);
+  if (pLab > 0) {
+    ctx.save();
+    ctx.globalAlpha = pLab;
+
+    const ticks = [B1, B2, B3];
+    for (const tick of ticks) {
+      ctx.beginPath();
+      ctx.moveTo(tick[0], tick[1] - 5);
+      ctx.lineTo(tick[0], tick[1] + 5);
+      ctx.strokeStyle = P.sub;
+      ctx.lineWidth   = 1;
+      ctx.stroke();
+    }
+
+    label('1',  (A[0] + B1[0]) / 2, A[1] + 22, '400 12px "Space Mono",monospace', P.t1, pLab);
+    label('√2', (A[0] + B2[0]) / 2, A[1] + 36, '400 12px "Space Mono",monospace', P.t2, pLab);
+    label('√3', (A[0] + B3[0]) / 2, A[1] + 50, '400 12px "Space Mono",monospace', P.t3, pLab);
+
+    midLabel(C[0], C[1], B1[0], B1[1], '√2', -18, P.t1, pLab, '400 12px "Space Mono",monospace');
+    midLabel(C[0], C[1], B2[0], B2[1], '√3', -18, P.t2, pLab, '400 12px "Space Mono",monospace');
+    midLabel(C[0], C[1], B3[0], B3[1], '2',  -18, P.t3, pLab, '400 12px "Space Mono",monospace');
+
+    drawRightAngle(A[0], A[1], 0, -1, 1, 0, 10, P.sub);
+    label('1', C[0] - 16, (C[1] + A[1]) / 2, '400 12px "Space Mono",monospace', P.fg, pLab);
+
+    const boxX = 405, boxY = 280, boxW = 272, boxH = 80;
+    ctx.globalAlpha = pLab;
+    ctx.fillStyle   = P.edge;
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+    ctx.strokeStyle = P.sub;
+    ctx.lineWidth   = 1;
+    ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+    ctx.globalAlpha = pLab;
+    ctx.font        = '700 11px "Space Mono",monospace';
+    ctx.textAlign   = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle   = P.sub;
+    ctx.fillText('THE SIDES FORM:', boxX + 14, boxY + 18);
+
+    ctx.font      = '700 16px "Space Mono",monospace';
+    ctx.fillStyle = P.fg;
+    ctx.fillText('√1 · √2 · √3 · √4', boxX + 14, boxY + 42);
+
+    ctx.font      = '400 10px "Space Mono",monospace';
+    ctx.fillStyle = P.sub;
+    ctx.fillText('consecutive square roots', boxX + 14, boxY + 62);
+
+    ctx.restore();
+  }
+}
+
+// ─── STEP 5: INTO 3D — RHOMBIC DODECAHEDRON ──────────────────────────────────
+function drawStep5(p) {
+  const ccx = 220, ccy = 230, E = 70;
+
+  const pCube = range(p, 0, 0.3);
+  ctx.save();
+  ctx.globalAlpha = Math.max(0.3, pCube);
+
+  const edges = [
+    [0,0,0,1,0,0],[0,0,0,0,1,0],[0,0,0,0,0,1],
+    [1,0,0,1,1,0],[1,0,0,1,0,1],
+    [0,1,0,1,1,0],[0,1,0,0,1,1],
+    [0,0,1,1,0,1],[0,0,1,0,1,1],
+    [1,1,0,1,1,1],[1,0,1,1,1,1],[0,1,1,1,1,1]
+  ];
+
+  ctx.strokeStyle = P.edge;
+  ctx.lineWidth   = 1.5;
+  for (const [x1,y1,z1,x2,y2,z2] of edges) {
+    const p1 = iso(x1,y1,z1,ccx,ccy,E);
+    const p2 = iso(x2,y2,z2,ccx,ccy,E);
+    ctx.beginPath();
+    ctx.moveTo(p1[0], p1[1]);
+    ctx.lineTo(p2[0], p2[1]);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  const pLT = range(p, 0.3, 0.55);
+  if (pLT > 0) {
+    ctx.save();
+    ctx.globalAlpha = pLT;
+    const ptCenter  = iso(0.5, 0.5, 0.5, ccx, ccy, E);
+    const ptEdgeMid = iso(0.5, 1, 1, ccx, ccy, E);
+    const ptCorner  = iso(1, 1, 1, ccx, ccy, E);
+
+    ctx.beginPath();
+    ctx.moveTo(ptCenter[0], ptCenter[1]);
+    ctx.lineTo(ptEdgeMid[0], ptEdgeMid[1]);
+    ctx.lineTo(ptCorner[0], ptCorner[1]);
+    ctx.strokeStyle = P.t2;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = P.t2;
+    for (const pt of [ptCenter, ptEdgeMid, ptCorner]) {
+      ctx.beginPath();
+      ctx.arc(pt[0], pt[1], 3, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  const pPyr = range(p, 0.5, 0.85);
+  if (pPyr > 0) {
+    const topCorners = [
+      iso(0,1,0,ccx,ccy,E),
+      iso(1,1,0,ccx,ccy,E),
+      iso(1,1,1,ccx,ccy,E),
+      iso(0,1,1,ccx,ccy,E),
+    ];
+    const apexY = 1 + 0.5 * pPyr;
+    const apexPt = iso(0.5, apexY, 0.5, ccx, ccy, E);
+
+    ctx.save();
+    for (let i = 0; i < 4; i++) {
+      const t1 = topCorners[i];
+      const t2 = topCorners[(i+1) % 4];
+      ctx.globalAlpha = 0.2 * pPyr;
+      ctx.fillStyle   = P.t3;
+      ctx.beginPath();
+      ctx.moveTo(apexPt[0], apexPt[1]);
+      ctx.lineTo(t1[0], t1[1]);
+      ctx.lineTo(t2[0], t2[1]);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.globalAlpha = pPyr;
+      ctx.strokeStyle = P.t3;
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  const pGhost = range(p, 0.88, 1.0);
+  if (pGhost > 0) {
+    const faces = [
+      { corners: [iso(0,0,0,ccx,ccy,E), iso(1,0,0,ccx,ccy,E), iso(1,0,1,ccx,ccy,E), iso(0,0,1,ccx,ccy,E)], apex: iso(0.5,-0.5,0.5,ccx,ccy,E) },
+      { corners: [iso(0,0,1,ccx,ccy,E), iso(1,0,1,ccx,ccy,E), iso(1,1,1,ccx,ccy,E), iso(0,1,1,ccx,ccy,E)], apex: iso(0.5,0.5,1.5,ccx,ccy,E) },
+      { corners: [iso(0,0,0,ccx,ccy,E), iso(1,0,0,ccx,ccy,E), iso(1,1,0,ccx,ccy,E), iso(0,1,0,ccx,ccy,E)], apex: iso(0.5,0.5,-0.5,ccx,ccy,E) },
+      { corners: [iso(1,0,0,ccx,ccy,E), iso(1,0,1,ccx,ccy,E), iso(1,1,1,ccx,ccy,E), iso(1,1,0,ccx,ccy,E)], apex: iso(1.5,0.5,0.5,ccx,ccy,E) },
+      { corners: [iso(0,0,0,ccx,ccy,E), iso(0,0,1,ccx,ccy,E), iso(0,1,1,ccx,ccy,E), iso(0,1,0,ccx,ccy,E)], apex: iso(-0.5,0.5,0.5,ccx,ccy,E) },
+    ];
+
+    ctx.save();
+    ctx.globalAlpha = 0.12 * pGhost;
+    ctx.strokeStyle = P.t3;
+    ctx.lineWidth   = 1;
+
+    for (const face of faces) {
+      for (let i = 0; i < 4; i++) {
+        const t1 = face.corners[i];
+        const t2 = face.corners[(i+1) % 4];
+        ctx.beginPath();
+        ctx.moveTo(face.apex[0], face.apex[1]);
+        ctx.lineTo(t1[0], t1[1]);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(face.apex[0], face.apex[1]);
+        ctx.lineTo(t2[0], t2[1]);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+
+  const pLabCube = range(p, 0.85, 1.0);
+  if (pLabCube > 0) {
+    ctx.save();
+    ctx.globalAlpha = pLabCube;
+    label('Cube + 6 pyramids', ccx, ccy + E * 1.1 + 14, '400 10px "Space Mono",monospace', P.sub, pLabCube);
+    label('= Rhombic Dodecahedron', ccx, ccy + E * 1.1 + 30, '700 10px "Space Mono",monospace', P.fg, pLabCube);
+    ctx.restore();
+  }
+
+  const pRhomb = range(p, 0.6, 1.0);
+  if (pRhomb > 0) {
+    const rcx = 530, rcy = 210;
+    const d1 = 60;
+    const d2 = Math.round(60 / S2 * 10) / 10;
+
+    const rTop    = [rcx, rcy - d2];
+    const rBottom = [rcx, rcy + d2];
+    const rLeft   = [rcx - d1, rcy];
+    const rRight  = [rcx + d1, rcy];
+
+    ctx.save();
+    ctx.globalAlpha = 0.12 * pRhomb;
+    ctx.fillStyle   = P.t2;
+    ctx.beginPath();
+    ctx.moveTo(rTop[0], rTop[1]);
+    ctx.lineTo(rRight[0], rRight[1]);
+    ctx.lineTo(rBottom[0], rBottom[1]);
+    ctx.lineTo(rLeft[0], rLeft[1]);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.globalAlpha = pRhomb;
+    ctx.strokeStyle = P.t2;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+
+    label('109.5°', rLeft[0] - 34, rcy, '400 9px "Space Mono",monospace', P.t2, pRhomb);
+    label('109.5°', rRight[0] + 34, rcy, '400 9px "Space Mono",monospace', P.t2, pRhomb);
+    label('70.5°', rcx, rTop[1] - 14, '400 9px "Space Mono",monospace', P.sub, pRhomb);
+    label('70.5°', rcx, rBottom[1] + 14, '400 9px "Space Mono",monospace', P.sub, pRhomb);
+
+    label('= 2 × 54.74°', rLeft[0] - 34, rcy + 14, '400 8px "Space Mono",monospace', P.sub, pRhomb * 0.7);
+    label('= 2 × 35.26°', rcx, rTop[1] - 26, '400 8px "Space Mono",monospace', P.sub, pRhomb * 0.7);
+
+    label('THE RHOMBIC FACE', rcx, rTop[1] - 48, '700 10px "Space Mono",monospace', P.fg, pRhomb);
+
+    ctx.restore();
+  }
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render() {
+  ctx.clearRect(0, 0, 700, 430);
+  ctx.fillStyle = P.bg;
+  ctx.fillRect(0, 0, 700, 430);
+
+  const p = progress;
+
+  switch(step) {
+    case 0: drawStep0(p); break;
+    case 1: drawStep1(p); break;
+    case 2: drawStep2(p); break;
+    case 3: drawStep3(p); break;
+    case 4: drawStep4(p); break;
+    case 5: drawStep5(p); break;
+  }
+}
+
+// ─── ANIMATION ────────────────────────────────────────────────────────────────
+function setStep(n) {
+  step     = n;
+  progress = 0;
+  let t0   = null;
+  if (raf) cancelAnimationFrame(raf);
+
+  function tick(ts) {
+    if (!t0) t0 = ts;
+    progress = ease(Math.min((ts - t0) / DURATION, 1));
+    render();
+    if (progress < 1) raf = requestAnimationFrame(tick);
+  }
+
+  raf = requestAnimationFrame(tick);
+  updateInfo(n);
+  updateDots(n);
+  updateNavButtons(n);
+}
+
+// ─── INFO PANEL CONTENT ───────────────────────────────────────────────────────
+const infoData = [
+  {
+    stepLabel: 'STEP 0 OF 5',
+    title: 'THE FLEISHMAN SEQUENCE',
+    body: `<p>Gregg Fleishman spent 40 years building with cubic geometry. At the center of his work is a discovery hiding in plain sight: three right triangles whose sides are consecutive square roots.</p>
+<p>This is the proof. Step through it with → or the button below.</p>`,
+  },
+  {
+    stepLabel: 'STEP 1 OF 5',
+    title: 'TRIANGLE I — THE SQUARE DIAGONAL',
+    ratio: 'Ratio: 1 : 1 : √2\nAngles: 45° · 45° · 90°',
+    body: `<p>A unit square has a diagonal of length √2. This is the Pythagorean theorem:</p>
+<div class="info-code">  1² + 1² = (√2)²</div>
+<p>The 45° fold is the foundation. From this single diagonal, Gregg's entire geometric system unfolds.</p>`,
+  },
+  {
+    stepLabel: 'STEP 2 OF 5',
+    title: 'TRIANGLE II — THE LOST TRIANGLE',
+    ratio: 'Ratio: 1 : √2 : √3\nAngles: 35.26° · 54.74° · 90°',
+    body: `<p>This triangle hides inside every cube. Connect the cube's center → midpoint of an edge → the nearest corner. The sides are 1, √2, √3.</p>
+<p>Its two acute angles generate every dihedral angle in the cubic polyhedra family:</p>
+<div class="info-code">  Tetrahedron       70.5°   = 2 × 35.26°
+  Cube              90°
+  Octahedron        109.5°  = 2 × 54.74°
+  Rhombic Dodeca    120°
+  Cuboctahedron     125.26° = 90° + 35.26°</div>
+<p>Gregg calls it "The Lost Triangle" because it hides in plain sight inside the framework.</p>`,
+  },
+  {
+    stepLabel: 'STEP 3 OF 5',
+    title: 'TRIANGLE III — THE EQUILATERAL SPLIT',
+    ratio: 'Ratio: 1 : √3 : 2\nAngles: 30° · 60° · 90°',
+    body: `<p>Drop the altitude of an equilateral triangle with side 2. The left half is a right triangle with sides 1, √3, 2.</p>
+<p>Note: 2 = √4. The hypotenuse is the fourth square root — completing the sequence.</p>
+<p>This triangle connects Gregg's cubic geometry to the tetrahedral family.</p>`,
+  },
+  {
+    stepLabel: 'STEP 4 OF 5',
+    title: 'THE FLEISHMAN SEQUENCE',
+    subtitle: 'All three triangles unified',
+    body: `<p>Stack the triangles at a shared right-angle vertex, sharing the same unit vertical leg.</p>
+<p>The horizontal legs land at 1, √2, √3 along the baseline.<br>The hypotenuses measure √2, √3, 2 (= √4).</p>
+<div class="info-code">  Together: √1 · √2 · √3 · √4</div>
+<p>The hypotenuse of each triangle is the next triangle's longer leg. A chain of consecutive square roots. This is the Fleishman Sequence.</p>
+<p>Mathematically: the first three triangles of the Spiral of Theodorus. Gregg's contribution is recognizing that these three correspond to the square diagonal, the cube diagonal, and the equilateral split — and that they unify the geometry of all cubic polyhedra.</p>`,
+  },
+  {
+    stepLabel: 'STEP 5 OF 5',
+    title: 'INTO 3D — THE RHOMBIC DODECAHEDRON',
+    subtitle: 'The Lost Triangle builds a universe',
+    body: `<p>Place a square pyramid on each face of a unit cube. The pyramid height = ½ unit.</p>
+<p>The result: 12 identical diamond faces. Every face is a rhombus with angles:</p>
+<div class="info-code">  70.53°  = 2 × 35.26°  (Lost Triangle base angle × 2)
+  109.47° = 2 × 54.74°  (Lost Triangle top angle × 2)</div>
+<p>The dihedral angle between adjacent faces = 120°.</p>
+<p>This form tiles 3D space with no gaps — it is the Voronoi cell of the FCC lattice.</p>
+<p>Gregg calls it the RHOMBICUBE. He has built this geometry at human scale across four decades: Sky Portal X, festival structures, permanent installations worldwide.</p>
+<a class="info-cta" href="#scene-3d" onclick="document.getElementById('scene-3d').scrollIntoView({behavior:'smooth'});return false;">Continue to 3D →</a>`,
+  },
+];
+
+function updateInfo(n) {
+  const panel = document.getElementById('info-panel');
+  const d = infoData[n];
+  let html = '';
+
+  html += `<div class="info-step-label">${d.stepLabel}</div>`;
+  html += `<div class="info-title">${d.title}</div>`;
+  if (d.subtitle) {
+    html += `<div class="info-ratio">${d.subtitle}</div>`;
+  }
+  if (d.ratio) {
+    html += `<div class="info-ratio" style="white-space:pre;">${d.ratio}</div>`;
+  }
+  html += `<div class="info-body">${d.body}</div>`;
+
+  panel.innerHTML = html;
+  panel.scrollTop = 0;
+}
+
+// ─── DOTS ─────────────────────────────────────────────────────────────────────
+function buildDots() {
+  const container = document.getElementById('dots');
+  container.innerHTML = '';
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.dataset.step = i;
+    dot.addEventListener('click', () => setStep(i));
+    container.appendChild(dot);
+  }
+}
+
+function updateDots(n) {
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach((d, i) => {
+    d.classList.toggle('active', i === n);
+  });
+}
+
+// ─── NAV BUTTONS ──────────────────────────────────────────────────────────────
+function updateNavButtons(n) {
+  document.getElementById('btn-prev').disabled = n === 0;
+  document.getElementById('btn-next').disabled = n === TOTAL_STEPS - 1;
+}
+
+document.getElementById('btn-prev').addEventListener('click', () => {
+  if (step > 0) setStep(step - 1);
+});
+document.getElementById('btn-next').addEventListener('click', () => {
+  if (step < TOTAL_STEPS - 1) setStep(step + 1);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' && step < TOTAL_STEPS - 1) setStep(step + 1);
+  if (e.key === 'ArrowLeft'  && step > 0)               setStep(step - 1);
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+buildDots();
+updateInfo(0);
+updateNavButtons(0);
+render();  // Step 0 starts at progress=1 (no animation)
+
+// Expose globals for 3D section / integration
+window.FleishmanSequence = {
+  TOTAL_STEPS,
+  currentStep: () => step,
+  goToStep: setStep,
+  palette: P,
+  constants: { U, S2, S3, ANGLE_A, ANGLE_B },
+  iso,
+  scenePlaceholderId: 'scene-3d',
+};
+</script>
+
+<!-- ── Three.js CDN scripts (must load before the 3D IIFE) ──────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<!-- ── 3D scene IIFE ────────────────────────────────────────────────────────── -->
+<script>
+(function () {
+  if (typeof THREE === 'undefined') {
+    console.error('[fls-3d] THREE is not loaded.');
+    return;
+  }
+
+  // ---------- palette ----------
+  var P = {
+    bg:   '#06080C', fg:   '#EBE6DC', sub:  '#475060', dim:  '#141824',
+    edge: '#1E2433', t1:   '#5B9BD5', t2:   '#E8A825', t3:   '#C85A38'
+  };
+  var C = {};
+  Object.keys(P).forEach(function (k) { C[k] = new THREE.Color(P[k]); });
+
+  var root = document.getElementById('threejs-root');
+  if (!root) { console.error('[fls-3d] #threejs-root not found.'); return; }
+
+  // ---------- info text per phase ----------
+  var INFO = {
+    A: { t: 'Phase A — The Lost Triangle',
+         b: 'This triangle lives inside every cube. Its three sides measure 1, √2, and √3 — the first three elements of the Fleishman Sequence. Its angles (35.26° and 54.74°) generate every dihedral angle in the cubic polyhedra family.' },
+    B: { t: 'Phase B — Cube → Rhombic Dodecahedron',
+         b: 'Add a square pyramid (height = ½ unit) to each face of the cube. The result: 12 identical diamond faces. Every face is a rhombus with angles 70.53° (= 2×35.26°) and 109.47° (= 2×54.74°) — directly from the Lost Triangle. This is Gregg\'s "Rhombicube."' },
+    C: { t: 'Phase C — Space-Filling Array',
+         b: 'The Rhombic Dodecahedron tiles 3D space with no gaps and no overlaps. It is the Voronoi cell of the FCC lattice — meaning it\'s the natural "territory" around each point in the densest sphere packing. Gregg built this geometry at human scale: Sky Portal X, festival structures, permanent installations.' }
+  };
+  var infoEl = document.getElementById('phase-info-text');
+  function setInfo(ph) {
+    infoEl.innerHTML = '<span class="phase-info-title">' + INFO[ph].t + '</span>' + INFO[ph].b;
+  }
+
+  // ---------- renderer / scene / camera ----------
+  var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 0);
+  root.appendChild(renderer.domElement);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+  camera.position.set(4.5, 3.5, 4.5);
+
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.minDistance = 1;
+  controls.maxDistance = 20;
+  controls.target.set(0, 0, 0);
+
+  // lights
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  var dir = new THREE.DirectionalLight(0xffffff, 0.8);
+  dir.position.set(5, 8, 5);
+  scene.add(dir);
+
+  // ---------- helpers ----------
+  function lineMat(color, opacity) {
+    return new THREE.LineBasicMaterial({ color: color, transparent: opacity < 1, opacity: opacity });
+  }
+  function faceMat(color, opacity, side) {
+    return new THREE.MeshStandardMaterial({
+      color: color, transparent: true, opacity: opacity,
+      side: side || THREE.DoubleSide, roughness: 0.6, metalness: 0.0,
+      depthWrite: false
+    });
+  }
+
+  // text/label sprite via CanvasTexture
+  function makeLabel(text, hexColor, worldSize) {
+    var pad = 8, fontPx = 64;
+    var cv = document.createElement('canvas');
+    var ctx = cv.getContext('2d');
+    ctx.font = '600 ' + fontPx + 'px -apple-system, Helvetica, Arial, sans-serif';
+    var w = Math.ceil(ctx.measureText(text).width) + pad * 2;
+    var h = fontPx + pad * 2;
+    cv.width = w; cv.height = h;
+    ctx.font = '600 ' + fontPx + 'px -apple-system, Helvetica, Arial, sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(6,8,12,0.55)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = hexColor;
+    ctx.fillText(text, w / 2, h / 2 + 2);
+    var tex = new THREE.CanvasTexture(cv);
+    tex.minFilter = THREE.LinearFilter;
+    var spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false, depthWrite: false }));
+    var s = worldSize || 0.4;
+    spr.scale.set(s * (w / h), s, 1);
+    return spr;
+  }
+
+  // Build a non-indexed BufferGeometry mesh+edges for a set of rhombus quads.
+  var _ctr = new THREE.Vector3(), _e1 = new THREE.Vector3(),
+      _e2 = new THREE.Vector3(), _nrm = new THREE.Vector3();
+  function buildQuadMesh(quads, color, opacity) {
+    var positions = [];
+    for (var i = 0; i < quads.length; i++) {
+      var q = quads[i], a = q[0], b = q[1], c = q[2], d = q[3];
+      _ctr.set((a.x + b.x + c.x + d.x) / 4, (a.y + b.y + c.y + d.y) / 4, (a.z + b.z + c.z + d.z) / 4);
+      _e1.subVectors(b, a); _e2.subVectors(c, a);
+      _nrm.crossVectors(_e1, _e2);
+      var outward = _nrm.dot(_ctr) >= 0;
+      if (outward) {
+        positions.push(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z);
+        positions.push(a.x, a.y, a.z, c.x, c.y, c.z, d.x, d.y, d.z);
+      } else {
+        positions.push(a.x, a.y, a.z, c.x, c.y, c.z, b.x, b.y, b.z);
+        positions.push(a.x, a.y, a.z, d.x, d.y, d.z, c.x, c.y, c.z);
+      }
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geo.computeVertexNormals();
+    return new THREE.Mesh(geo, faceMat(color, opacity, THREE.DoubleSide));
+  }
+
+  function buildQuadEdges(quads, color, opacity) {
+    var pos = [];
+    for (var i = 0; i < quads.length; i++) {
+      var q = quads[i];
+      for (var e = 0; e < 4; e++) {
+        var v0 = q[e], v1 = q[(e + 1) % 4];
+        pos.push(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z);
+      }
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    return new THREE.LineSegments(geo, lineMat(color, opacity));
+  }
+
+  // ===================================================================
+  // RHOMBIC DODECAHEDRON definition
+  // ===================================================================
+  function V(x, y, z) { return new THREE.Vector3(x, y, z); }
+
+  var c000 = V(-1,-1,-1), c100 = V(1,-1,-1), c110 = V(1,1,-1), c010 = V(-1,1,-1);
+  var c001 = V(-1,-1,1),  c101 = V(1,-1,1),  c111 = V(1,1,1),  c011 = V(-1,1,1);
+  var fR = V(2,0,0), fL = V(-2,0,0), fT = V(0,2,0), fB = V(0,-2,0), fF = V(0,0,2), fBk = V(0,0,-2);
+
+  function rdQuads(scale) {
+    function fc(v) { return V(v.x * scale, v.y * scale, v.z * scale); }
+    var R = fc(fR), L = fc(fL), T = fc(fT), B = fc(fB), F = fc(fF), Bk = fc(fBk);
+    return [
+      [T, c111, F, c011],
+      [T, c010, Bk, c110],
+      [B, c001, F, c101],
+      [B, c100, Bk, c000],
+      [R, c110, T, c111],
+      [L, c011, T, c010],
+      [R, c101, B, c100],
+      [L, c000, B, c001],
+      [R, c101, F, c111],
+      [L, c011, F, c001],
+      [R, c110, Bk, c100],
+      [L, c010, Bk, c000]
+    ];
+  }
+
+  // ===================================================================
+  // PHASE A — Lost Triangle in cube
+  // ===================================================================
+  var groupA = new THREE.Group();
+  scene.add(groupA);
+
+  var cubeEdges = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2)),
+    lineMat(C.edge, 1.0)
+  );
+  groupA.add(cubeEdges);
+
+  var ltCenter = V(0, 0, 0);
+  var ltMid    = V(0, 1, 1);
+  var ltCorner = V(1, 1, 1);
+
+  var ltGeo = new THREE.BufferGeometry();
+  ltGeo.setAttribute('position', new THREE.Float32BufferAttribute([
+    ltCenter.x, ltCenter.y, ltCenter.z,
+    ltMid.x, ltMid.y, ltMid.z,
+    ltCorner.x, ltCorner.y, ltCorner.z
+  ], 3));
+  ltGeo.computeVertexNormals();
+  groupA.add(new THREE.Mesh(ltGeo, faceMat(C.t2, 0.5, THREE.DoubleSide)));
+
+  var ltEdgeGeo = new THREE.BufferGeometry();
+  ltEdgeGeo.setAttribute('position', new THREE.Float32BufferAttribute([
+    ltCenter.x, ltCenter.y, ltCenter.z, ltMid.x, ltMid.y, ltMid.z,
+    ltMid.x, ltMid.y, ltMid.z, ltCorner.x, ltCorner.y, ltCorner.z,
+    ltCorner.x, ltCorner.y, ltCorner.z, ltCenter.x, ltCenter.y, ltCenter.z
+  ], 3));
+  groupA.add(new THREE.LineSegments(ltEdgeGeo, lineMat(C.t2, 0.9)));
+
+  [ltCenter, ltMid, ltCorner].forEach(function (p) {
+    var s = new THREE.Mesh(
+      new THREE.SphereGeometry(0.04, 16, 12),
+      new THREE.MeshBasicMaterial({ color: C.t2 })
+    );
+    s.position.copy(p);
+    groupA.add(s);
+  });
+
+  function mid(a, b) { return V((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2); }
+  function addLabelAt(group, text, color, pos, off, size) {
+    var l = makeLabel(text, color, size || 0.4);
+    l.position.set(pos.x + (off ? off.x : 0), pos.y + (off ? off.y : 0), pos.z + (off ? off.z : 0));
+    group.add(l);
+  }
+  addLabelAt(groupA, '1',  P.fg, mid(ltCenter, ltMid),  V(-0.18, 0, 0.05));
+  addLabelAt(groupA, '√2', P.fg, mid(ltMid, ltCorner),  V(0.1, 0.16, 0));
+  addLabelAt(groupA, '√3', P.fg, mid(ltCorner, ltCenter), V(0.18, 0.06, 0.18));
+
+  addLabelAt(groupA, '35.26°', P.t2, ltCorner, V(0.22, 0.12, 0.0), 0.34);
+  addLabelAt(groupA, '54.74°', P.t2, ltCenter, V(-0.1, -0.22, -0.1), 0.34);
+  addLabelAt(groupA, '90°',    P.t2, ltMid,    V(-0.05, 0.22, 0.18), 0.30);
+  // Scale groupA: cube corners at ±1 (bounding radius ~1.73) → scaled to fill frame
+  groupA.scale.set(1.5, 1.5, 1.5);
+
+  // ===================================================================
+  // PHASE B — Cube -> Rhombic Dodecahedron (animated)
+  // ===================================================================
+  var groupB = new THREE.Group();
+  groupB.visible = false;
+  scene.add(groupB);
+
+  var cubeEdgesB = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2)),
+    lineMat(C.edge, 0.7)
+  );
+  groupB.add(cubeEdgesB);
+
+  var rdMeshB = null, rdEdgesB = null;
+  function rebuildB(scaleFC) {
+    var quads = rdQuads(scaleFC);
+    if (rdMeshB) { groupB.remove(rdMeshB); rdMeshB.geometry.dispose(); }
+    if (rdEdgesB) { groupB.remove(rdEdgesB); rdEdgesB.geometry.dispose(); }
+    rdMeshB = buildQuadMesh(quads, C.t2, 0.7);
+    rdEdgesB = buildQuadEdges(quads, C.fg, 0.85);
+    groupB.add(rdMeshB);
+    groupB.add(rdEdgesB);
+  }
+  rebuildB(0.5);
+  // Scale groupB: RD face centers reach ±2 (bounding radius ~2.4) → scaled to fill frame
+  groupB.scale.set(1.2, 1.2, 1.2);
+
+  var bAnim = { active: false, t: 0, dur: 2.0 };
+
+  // ===================================================================
+  // PHASE C — Space-filling array (3x3x3)
+  // ===================================================================
+  var groupC = new THREE.Group();
+  groupC.visible = false;
+  scene.add(groupC);
+
+  var latticeGroup = new THREE.Group();
+  latticeGroup.visible = false;
+  groupC.add(latticeGroup);
+
+  (function buildC() {
+    var fullQuads = rdQuads(1.0);
+
+    for (var i = -1; i <= 1; i++) {
+      for (var j = -1; j <= 1; j++) {
+        for (var k = -1; k <= 1; k++) {
+          var parity = (i + j + k) & 1;
+          var col = parity === 0 ? C.t2 : C.t1;
+          var center = (i === 0 && j === 0 && k === 0);
+          var op = center ? 0.6 : 0.3;
+
+          var mesh = buildQuadMesh(fullQuads, col, op);
+          var edges = buildQuadEdges(fullQuads, C.edge, center ? 0.9 : 0.5);
+          var pos = new THREE.Vector3(i * 2, j * 2, k * 2);
+          mesh.position.copy(pos);
+          edges.position.copy(pos);
+          groupC.add(mesh);
+          groupC.add(edges);
+
+          var box = new THREE.LineSegments(
+            new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 2, 2)),
+            lineMat(C.sub, 0.35)
+          );
+          box.position.copy(pos);
+          latticeGroup.add(box);
+        }
+      }
+    }
+  })();
+  // Scale groupC: 3×3×3 grid spans ±4 from origin (bounding radius ~6.9) → scaled down to fill frame
+  groupC.scale.set(0.42, 0.42, 0.42);
+
+  // ===================================================================
+  // PHASE SWITCHING
+  // ===================================================================
+  var phase = 'A';
+  var autoRotateA = true;
+
+  // Single shared home camera position — all phases start from here
+  var CAM_HOME = { pos: V(4.5, 3.5, 4.5), tgt: V(0, 0, 0) };
+
+  var tween = null;
+  function tweenCamera(toPos, toTgt, frames) {
+    tween = {
+      fromPos: camera.position.clone(), toPos: toPos.clone(),
+      fromTgt: controls.target.clone(), toTgt: toTgt.clone(),
+      t: 0, dur: frames || 60
+    };
+  }
+
+  var subB = document.getElementById('fls-subctrl-B');
+  var subC = document.getElementById('fls-subctrl-C');
+
+  function setPhase(ph) {
+    phase = ph;
+    groupA.visible = (ph === 'A');
+    groupB.visible = (ph === 'B');
+    groupC.visible = (ph === 'C');
+    subB.style.display = (ph === 'B') ? 'flex' : 'none';
+    subC.style.display = (ph === 'C') ? 'flex' : 'none';
+
+    setInfo(ph);
+    tweenCamera(CAM_HOME.pos, CAM_HOME.tgt, 60);
+
+    if (ph === 'A') { autoRotateA = true; }
+    if (ph === 'B') { bAnim.active = true; bAnim.t = 0; }
+
+    var btns = document.querySelectorAll('#threejs-controls .phase-btn');
+    btns.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-phase') === ph); });
+  }
+
+  document.querySelectorAll('#threejs-controls .phase-btn').forEach(function (b) {
+    b.addEventListener('click', function () { setPhase(b.getAttribute('data-phase')); });
+  });
+
+  controls.addEventListener('start', function () { autoRotateA = false; });
+
+  document.getElementById('fls-b-animate').addEventListener('click', function () {
+    bAnim.active = true; bAnim.t = 0;
+  });
+  document.getElementById('fls-b-square').addEventListener('click', function () {
+    tweenCamera(V(6, 0.0, 0.0), V(0, 0, 0), 50);
+  });
+  document.getElementById('fls-b-hex').addEventListener('click', function () {
+    tweenCamera(V(3.6, 3.6, 3.6), V(0, 0, 0), 50);
+  });
+
+  var cLatticeBtn = document.getElementById('fls-c-lattice');
+  cLatticeBtn.addEventListener('click', function () {
+    latticeGroup.visible = !latticeGroup.visible;
+    cLatticeBtn.classList.toggle('on', latticeGroup.visible);
+  });
+
+  // ---------- resize ----------
+  function resize() {
+    var w = root.clientWidth || 800;
+    var h = root.clientHeight || 500;
+    // updateStyle must stay true: with it false the canvas keeps its full buffer
+    // size (w*dpr) as its CSS size, overflowing the container and pushing the
+    // scene's center into the bottom-right (the "Phase C off-center" symptom).
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ---------- animation loop ----------
+  var clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    var dt = clock.getDelta();
+
+    if (tween) {
+      tween.t++;
+      var a = Math.min(tween.t / tween.dur, 1);
+      var e = a * a * (3 - 2 * a);
+      camera.position.lerpVectors(tween.fromPos, tween.toPos, e);
+      controls.target.lerpVectors(tween.fromTgt, tween.toTgt, e);
+      if (a >= 1) tween = null;
+    }
+
+    if (phase === 'A' && autoRotateA && !tween) {
+      groupA.rotation.y += 0.003;
+    }
+
+    if (phase === 'B' && bAnim.active) {
+      bAnim.t += dt;
+      var p = Math.min(bAnim.t / bAnim.dur, 1);
+      var ee = p * p * (3 - 2 * p);
+      var scaleFC = 0.5 + ee * 0.5;
+      rebuildB(scaleFC);
+      if (p >= 1) bAnim.active = false;
+    }
+
+    controls.update();
+    renderer.render(scene, camera);
+  }
+
+  // ---------- init ----------
+  setPhase('A');
+  animate();
+
+  // Sync 2D sequence to step 5 when user scrolls to 3D section
+  var scene3dEl = document.getElementById('scene-3d');
+  if (scene3dEl && window.FleishmanSequence) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && window.FleishmanSequence.currentStep() < 5) {
+          window.FleishmanSequence.goToStep(5);
+        }
+      });
+    }, { threshold: 0.15 });
+    observer.observe(scene3dEl);
+  }
+})();
+</script>
+
+</body>
+</html>
