@@ -1306,13 +1306,13 @@ function drawStep5(p) {
     ctx.lineWidth   = 2;
     ctx.stroke();
 
-    label('109°', rLeft[0] - 34, rcy, '400 9px "Space Mono",monospace', P.t2, pRhomb);
-    label('109°', rRight[0] + 34, rcy, '400 9px "Space Mono",monospace', P.t2, pRhomb);
-    label('71°', rcx, rTop[1] - 14, '400 9px "Space Mono",monospace', P.sub, pRhomb);
-    label('71°', rcx, rBottom[1] + 14, '400 9px "Space Mono",monospace', P.sub, pRhomb);
+    label('110°', rLeft[0] - 34, rcy, '400 9px "Space Mono",monospace', P.t2, pRhomb);
+    label('110°', rRight[0] + 34, rcy, '400 9px "Space Mono",monospace', P.t2, pRhomb);
+    label('70°', rcx, rTop[1] - 14, '400 9px "Space Mono",monospace', P.sub, pRhomb);
+    label('70°', rcx, rBottom[1] + 14, '400 9px "Space Mono",monospace', P.sub, pRhomb);
 
-    label('≈ 2 × 55°', rLeft[0] - 34, rcy + 14, '400 8px "Space Mono",monospace', P.sub, pRhomb * 0.7);
-    label('≈ 2 × 35°', rcx, rTop[1] - 26, '400 8px "Space Mono",monospace', P.sub, pRhomb * 0.7);
+    label('= 2 × 55°', rLeft[0] - 34, rcy + 14, '400 8px "Space Mono",monospace', P.sub, pRhomb * 0.7);
+    label('= 2 × 35°', rcx, rTop[1] - 26, '400 8px "Space Mono",monospace', P.sub, pRhomb * 0.7);
 
     label('THE RHOMBIC FACE', rcx, rTop[1] - 48, '700 10px "Space Mono",monospace', P.fg, pRhomb);
 
@@ -1380,9 +1380,9 @@ const infoData = [
     ratio: 'Ratio: 1 : √2 : √3\nAngles: 35° · 55° · 90°',
     body: `<p>This triangle hides inside every cube. Connect the cube's center → midpoint of an edge → the nearest corner. The sides are 1, √2, √3.</p>
 <p>Its two acute angles generate every dihedral angle in the cubic polyhedra family:</p>
-<div class="info-code">  Tetrahedron     71°  ≈ 2 × 35°
+<div class="info-code">  Tetrahedron     70°  = 2 × 35°
   Cube            90°
-  Octahedron      109° ≈ 2 × 55°
+  Octahedron      110° = 2 × 55°
   Rhombic Dodeca  120°
   Cuboctahedron   125° = 90° + 35°</div>
 <p>Gregg calls it "The Lost Triangle" because it hides in plain sight inside the framework.</p>`,
@@ -1411,8 +1411,8 @@ const infoData = [
     subtitle: 'The Lost Triangle builds a universe',
     body: `<p>Place a square pyramid on each face of a unit cube. The pyramid height = ½ unit.</p>
 <p>The result: 12 identical diamond faces. Every face is a rhombus with angles:</p>
-<div class="info-code">  71°  ≈ 2 × 35°  (Lost Triangle base angle × 2)
-  109° ≈ 2 × 55°  (Lost Triangle top angle × 2)</div>
+<div class="info-code">  70°  = 2 × 35°  (Lost Triangle base angle × 2)
+  110° = 2 × 55°  (Lost Triangle top angle × 2)</div>
 <p>The dihedral angle between adjacent faces = 120°.</p>
 <p>This form tiles 3D space with no gaps — it is the Voronoi cell of the FCC lattice.</p>
 <p>Gregg calls it the RHOMBICUBE. He has built this geometry at human scale across four decades: Sky Portal X, festival structures, permanent installations worldwide.</p>
@@ -1565,7 +1565,7 @@ window.FleishmanSequence = {
     A: { t: 'Phase A — The Lost Triangle',
          b: 'This triangle lives inside every cube. Its three sides measure 1, √2, and √3 — the first three elements of the Fleishman Sequence. Its angles (35° and 55°) generate every dihedral angle in the cubic polyhedra family.' },
     B: { t: 'Phase B — Cube → Rhombic Dodecahedron',
-         b: 'Add a square pyramid (height = ½ unit) to each face of the cube. The result: 12 identical diamond faces. Every face is a rhombus with angles 71° (≈ 2×35°) and 109° (≈ 2×55°) — directly from the Lost Triangle. This is Gregg\'s "Rhombicube."' },
+         b: 'Add a square pyramid (height = ½ unit) to each face of the cube. The result: 12 identical diamond faces. Every face is a rhombus with angles 70° (= 2×35°) and 110° (= 2×55°) — directly from the Lost Triangle. This is Gregg\'s "Rhombicube."' },
     C: { t: 'Phase C — Space-Filling Array',
          b: 'The Rhombic Dodecahedron tiles 3D space with no gaps and no overlaps. It is the Voronoi cell of the FCC lattice — meaning it\'s the natural "territory" around each point in the densest sphere packing. Gregg built this geometry at human scale: Sky Portal X, festival structures, permanent installations.' },
     D: { t: 'Phase D — The Vector System',
