@@ -28,6 +28,24 @@
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;}
   .split{display:grid;grid-template-columns:0.9fr 1.1fr;gap:64px;align-items:center;}
   @media(max-width:860px){.split,.grid2{grid-template-columns:1fr;gap:32px;}.sec{padding:80px 24px;}.h2{font-size:34px;}}
+  /* supplemental theory note — collapsed by default, subordinate to the work above it */
+  .theory{max-width:780px;margin:56px auto 0;border:1px solid var(--hairline);border-radius:var(--radius-lg);background:var(--bg-surface);transition:border-color .3s ease;}
+  .theory[open]{border-color:var(--border-strong);}
+  .theory>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:18px 24px;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);}
+  .theory>summary::-webkit-details-marker{display:none;}
+  .theory .mk{display:inline-flex;width:15px;height:15px;align-items:center;justify-content:center;font-size:15px;line-height:1;transition:transform .25s ease;}
+  .theory[open] .mk{transform:rotate(45deg);}
+  .theory .note{padding:2px 24px 26px;}
+  .theory .lead{font-family:var(--font-editorial);font-style:italic;font-weight:300;font-size:18px;line-height:1.55;color:var(--tx-dim);margin:0 0 18px;max-width:62ch;}
+  .theory .srow{display:grid;grid-template-columns:118px 1fr;gap:20px;padding:14px 0;border-top:1px solid var(--hairline);align-items:baseline;}
+  .theory .sk{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--tx);}
+  .theory .sv{font-size:14px;line-height:1.7;color:var(--tx-dim);}
+  .theory .sv a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 38%,transparent);}
+  .theory .sv a:hover{border-bottom-color:var(--accent);}
+  .theory .sv .muted{color:var(--tx-faint);}
+  .theory .foot{margin:20px 0 0;font-size:11.5px;line-height:1.65;color:var(--tx-faint);}
+  @media(max-width:860px){.theory .srow{grid-template-columns:1fr;gap:5px;}}
 </style>
 </head>
 <body>
@@ -38,9 +56,9 @@
   <a class="navlink" href="index.html">Geometry Lesson</a>
   <a class="navlink active" href="mathematics.html">The Lost Triangle</a>
   <a class="navlink" href="fleishman-sequence.html">Fleishman Sequence</a>
+  <a class="navlink" href="cluster-structures.html">Cluster Structures</a>
   <a class="navlink" href="cube-diagonals.html">Cube Diagonals</a>
   <a class="navlink" href="rhombic-dodecahedron.html">Rhombic Dodecahedron</a>
-  <a class="navlink" href="vector-house.html">Vector House</a>
   <a class="navlink" href="silver-triangle.html">Silver Triangle</a>
   <a class="navlink" href="poster/poster.html">Poster</a>
   <button class="gf-toggle" id="gfThemeToggle" type="button" aria-label="Switch to light mode">
@@ -122,6 +140,16 @@
         <div class="cap"><div class="t">Reflection study · bronze</div><div class="s">Original artwork</div></div>
       </div>
     </div>
+    <details class="theory" data-reveal>
+      <summary><span class="mk" aria-hidden="true">+</span> Theory note · symmetry — a supporting lens</summary>
+      <div class="note">
+        <p class="lead">Stand back from the drawing and the Lost Triangle behaves less like a fixed figure than a generative seed: the same proportions, carried three ways.</p>
+        <div class="srow"><div class="sk">Reflection</div><div class="sv">Mirror it across an edge and the proportions hold — the move that folds the triangle into the <a href="rhombic-dodecahedron.html">rhombic dodecahedron</a>. <span class="muted">(the bronze plate above is a reflection study.)</span></div></div>
+        <div class="srow"><div class="sk">Rotation</div><div class="sv">Turn it about an axis and it finds new alignments under the same rule — the plan that <a href="fleishman-sequence.html">stands up into space</a>.</div></div>
+        <div class="srow"><div class="sk">Translation</div><div class="sv">Repeat it step by step and it propagates — one module becoming the <a href="cluster-structures.html">whole of space</a>.</div></div>
+        <p class="foot">Reflection, rotation and translation are standard terms from geometry; here they only name what Gregg's constructions already do.</p>
+      </div>
+    </details>
     <div data-reveal style="margin-top:44px;text-align:center;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
       <a href="index.html" style="display:inline-block;padding:15px 36px;background:var(--accent);color:var(--bg);font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:var(--radius-sm);">Open the interactive lesson</a>
       <a href="lost-triangle-construction.html" style="display:inline-block;padding:15px 28px;background:transparent;color:var(--tx);font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border:1px solid var(--border-strong);border-radius:var(--radius-sm);">Animated construction</a>
