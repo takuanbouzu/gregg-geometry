@@ -1,6 +1,6 @@
 # Gregg Geometry — Session Handoff
 
-_Last updated: 2026-06-20. Repo: `~/Code/gregg-geometry`. SSH remote `takuanbouzu/gregg-geometry`; pushed to **`main`** (and `codex-web-build`) for sharing._
+_Last updated: 2026-06-20. Repo: `~/Code/gregg-geometry`. SSH remote `takuanbouzu/gregg-geometry`; the shareable build is on **`codex-web-build`** (pushed). `main` is a separate, older "deploy design pass" (cream default, hamburger menu, view switcher) — intentionally left untouched; reconcile later if wanted._
 
 This is the live handoff for the next Claude Code session. Read it first.
 
@@ -10,14 +10,17 @@ This is the live handoff for the next Claude Code session. Read it first.
 
 The site was taken to a shareable state: integrity-swept (all internal links/images resolve;
 nav consistent — 8 items, 1 active per page; no console errors across every page in night + paper),
-`README.md` added, and OG/Twitter social meta added to `index.html` (base URL assumes the GitHub
-Pages default `https://takuanbouzu.github.io/gregg-geometry/` — update if a custom domain is used).
+`README.md` added, and OG/Twitter social meta added to `index.html` (base URL is the GitHub Pages
+default `https://takuanbouzu.github.io/gregg-geometry/` — the project Pages URL is the same whatever
+branch serves it; update only if a custom domain is used).
 
 - **Vector House is HIDDEN** — removed from the nav site-wide (file kept, reachable only by direct
   URL) and its visible dev-note stripped, pending confirmation with Gregg of the DXF-derived values
   (`M = 66√2`, etc.) and the "Vector House"/"silver fold" vocabulary. Re-add to nav once confirmed.
-- **To go live:** enable GitHub Pages on `main` (root) in the repo settings — Claude can't toggle
-  Pages. If a custom domain is used, update the `og:`/`twitter:` URLs in `index.html`.
+- **To go live:** in the repo's **Settings → Pages**, set Source = "Deploy from a branch", Branch =
+  **`codex-web-build`**, folder = `/ (root)`. (Claude can't toggle Pages.) The site appears at
+  `https://takuanbouzu.github.io/gregg-geometry/`. If a custom domain is used, update the `og:`/
+  `twitter:` URLs in `index.html`.
 
 ---
 
