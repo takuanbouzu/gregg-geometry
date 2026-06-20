@@ -12,6 +12,12 @@
 */
 
 :root{
+  /* ============================================================
+     DARK · "Gregg Night" — the brand default.
+     Mirrors the instrument's THEMES.night so chrome + 3D match.
+     ============================================================ */
+  color-scheme:dark;
+
   /* ---- ground & chrome ---- */
   --bg:#0B0B0B;            /* warm near-black — replaces the navy gradient */
   --bg-surface:#141414;
@@ -19,6 +25,7 @@
   --border:#252525;
   --border-strong:#383838;
   --hairline:#1c1c1c;
+  --nav-bg:rgba(11,11,11,0.82);   /* sticky-nav glass                     */
 
   --tx:#F0EDE8;            /* text primary   */
   --tx-dim:#8A8480;        /* text secondary */
@@ -34,9 +41,11 @@
   --font-ui:'Space Grotesk',sans-serif;         /* UI, body, controls, infoboxes  */
   --font-mono:'Space Mono',ui-monospace,monospace;
 
-  /* ---- geometry role-colors · SHARED CONTRACT · do NOT brand-shift ----
-     Semantic, not thematic. Used verbatim by brand pages AND by the
-     instrument's default (night) theme so the two layers match.        */
+  /* ---- geometry role-colors · SHARED CONTRACT ----
+     Semantic, not thematic. In DARK these are used verbatim by brand
+     pages AND by the instrument's night theme so the two layers match.
+     In LIGHT (below) they shift to the instrument's `paper` palette —
+     keeping cross-layer parity, since bone-on-cream would be invisible. */
   --geo-unit:#F0EDE8;      /* edge · the module "1"  (bone)              */
   --geo-face:#4A90D9;      /* face diagonal · √2     (blue)              */
   --geo-space:#E0349E;     /* space diagonal · √3 · Lost Triangle (MAGENTA — signature) */
@@ -54,6 +63,41 @@
   --ease:cubic-bezier(.2,.7,.2,1);
 }
 
+/* ============================================================
+   LIGHT · "Paper" — built from the instrument's THEMES.paper.
+   Cream ground, ink text, gold identity deepened to a bronze
+   that survives on a light surface. Geometry roles adopt the
+   paper scene values so swatches match the 3D in paper mode.
+   ============================================================ */
+:root[data-theme="light"]{
+  color-scheme:light;
+
+  --bg:#F4EFE6;
+  --bg-surface:#FBF7EE;
+  --bg-elevated:#FFFFFF;
+  --border:rgba(20,20,20,0.12);
+  --border-strong:rgba(20,20,20,0.24);
+  --hairline:rgba(20,20,20,0.08);
+  --nav-bg:rgba(246,242,232,0.82);
+
+  --tx:#1B1B1B;
+  --tx-dim:rgba(27,27,27,0.60);
+  --tx-faint:rgba(27,27,27,0.38);
+
+  --accent:#8A6A2F;                       /* deepened gold — ~4.6:1 on cream */
+  --accent-dim:rgba(138,106,47,0.12);
+
+  --geo-unit:#1769FF;                      /* paper-scene edge (blue)        */
+  --geo-face:#E2811F;                      /* paper-scene face diagonal      */
+  --geo-space:#C81E5A;                     /* paper-scene space diagonal     */
+  --geo-tri:#1F9C63;                       /* paper-scene root triangle      */
+  --geo-angle:#8A6A2F;                     /* angle measures (deep gold)     */
+
+  --conf-confirmed:#1F9C63;
+  --conf-interp:#8A6A2F;
+  --conf-hyp:#C81E5A;
+}
+
 /* ---- base ---- */
 html{scroll-behavior:smooth;}
 body{
@@ -63,6 +107,7 @@ body{
   font-family:var(--font-ui);
   line-height:1;
   -webkit-font-smoothing:antialiased;
+  transition:background .5s var(--ease), color .5s var(--ease);
 }
 
 /* ============================================================
@@ -73,10 +118,16 @@ body{
   position:sticky; top:0; z-index:70;
   display:flex; align-items:center; gap:36px;
   min-height:74px; padding:0 56px;
-  background:rgba(11,11,11,0.82);
+  background:var(--nav-bg);
   -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
   border-bottom:1px solid var(--hairline);
+  transition:background .5s var(--ease), border-color .5s var(--ease);
+  /* the link set can outgrow one row on narrower desktops — let it scroll
+     horizontally while brand (left) and the theme toggle (right) stay put. */
+  overflow-x:auto; overflow-y:hidden;
+  scrollbar-width:none; -ms-overflow-style:none;
 }
+#gfnav::-webkit-scrollbar{ display:none; }
 #gfnav .brand{
   font-family:var(--font-display); font-weight:800;
   font-size:14px; letter-spacing:0.08em; text-transform:uppercase;
@@ -121,3 +172,34 @@ body{
   transition:opacity .9s var(--ease), transform .9s var(--ease);
 }
 [data-reveal].is-in{opacity:1; transform:none;}
+
+/* ============================================================
+   THEME TOGGLE  (.gf-toggle)  — sun/moon switch for #gfnav.
+   Markup:
+     <button class="gf-toggle" id="gfThemeToggle" type="button"
+             aria-label="Toggle light or dark mode">
+       <svg class="i-moon" ...><!-- dark active --></svg>
+       <svg class="i-sun"  ...><!-- light active --></svg>
+     </button>
+   Wiring lives in assets/gf-theme.js. The two glyphs are stacked;
+   the active theme's glyph is shown via [data-theme].
+   ============================================================ */
+.gf-toggle{
+  appearance:none; -webkit-appearance:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:34px; padding:0; flex-shrink:0;
+  border:1px solid var(--border-strong);
+  border-radius:50%; color:var(--tx-dim); cursor:pointer;
+  /* pinned to the right edge so it stays reachable when links overflow-scroll */
+  position:sticky; right:0; margin-left:4px;
+  background:var(--nav-bg);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  box-shadow:-16px 0 16px -8px var(--nav-bg);
+  transition:color .16s var(--ease), border-color .16s var(--ease), background .16s var(--ease);
+}
+.gf-toggle:hover{ color:var(--tx); border-color:var(--accent); }
+.gf-toggle svg{ width:16px; height:16px; display:block; }
+.gf-toggle .i-sun{ display:none; }
+.gf-toggle .i-moon{ display:block; }
+:root[data-theme="light"] .gf-toggle .i-sun{ display:block; }
+:root[data-theme="light"] .gf-toggle .i-moon{ display:none; }
