@@ -5,53 +5,63 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Lost Triangle — Gregg Fleishman</title>
 <link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/gf-tokens.css">
+<script src="assets/gf-theme.js"></script>
+<script src="assets/gf-scene.js"></script>
 <style>
-  :root{
-    --bg:#f6f2e8;--ink:#141414;--muted:#6b665d;--grid:#d9d2c3;
-    --unit:#1769ff;--face:#e2811f;--space:#d9295f;--tri:#23a76d;--angle:#927400;
-  }
+  /* floating-panel chrome — dark by default (gf-tokens), cream in light */
+  :root{ --panel:rgba(20,20,20,.74); --panel-bd:var(--border-strong); --panel-sh:0 12px 34px rgba(0,0,0,.40); }
+  :root[data-theme="light"]{ --panel:rgba(255,250,240,.90); --panel-bd:rgba(20,20,20,.12); --panel-sh:0 8px 28px rgba(40,28,8,.10); }
   *{box-sizing:border-box;}
-  html,body{margin:0;height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% 40%,#fffaf0 0%,#f6f2e8 55%,#e8deca 100%);}
-  #gfnav{
-    position:fixed;top:0;left:0;right:0;z-index:999;height:46px;
-    display:flex;justify-content:center;align-items:center;gap:8px;padding:0 16px;
-    background:transparent;
-  }
-  #gfnav span{font-size:11px;font-weight:500;color:rgba(20,20,20,.3);letter-spacing:.08em;text-transform:uppercase;margin-right:4px;}
-  #gfnav a{font-size:12px;font-weight:500;text-decoration:none;padding:5px 14px;border-radius:18px;transition:all .18s;}
-  #gfnav a.active{background:rgba(20,20,20,.1);color:rgba(20,20,20,.85);border:.5px solid rgba(20,20,20,.2);}
-  #gfnav a.inactive{background:rgba(246,242,232,.7);color:rgba(20,20,20,.45);border:.5px solid rgba(20,20,20,.1);}
-  @media(max-width:720px){#gfnav{justify-content:flex-start;overflow-x:auto;padding:0 10px;}#gfnav a{font-size:11px;padding:5px 10px;}#gfnav span{font-size:10px;white-space:nowrap;}}
+  html,body{margin:0;height:100%;}
+  body{ color:var(--tx); font-family:var(--font-ui);
+        background:radial-gradient(circle at 50% 40%, var(--bg-elevated) 0%, var(--bg) 56%, var(--bg) 100%); }
+  /* full-screen scene: compact fixed nav (base styling from gf-tokens #gfnav) */
+  #gfnav{ position:fixed; min-height:48px; gap:18px; padding:0 16px; }
   #wrap{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden;}
   canvas{display:block;position:absolute;top:0;left:0;width:100%;height:100%;}
-  .panel{position:absolute;z-index:10;background:rgba(255,250,240,.88);border:1px solid rgba(20,20,20,.1);box-shadow:0 8px 28px rgba(40,28,8,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:14px;padding:14px 16px;}
-  #title{left:24px;top:62px;max-width:520px;}
-  #title h1{font-size:18px;line-height:1.16;margin:0 0 6px;font-weight:760;letter-spacing:-.02em;}
-  #title p{font-size:12px;line-height:1.42;margin:0;color:var(--muted);}
-  #legend{right:24px;top:62px;width:245px;font-size:12px;}
-  .row{display:flex;align-items:center;gap:9px;margin:7px 0;color:var(--muted);}
+  .panel{position:absolute;z-index:10;background:var(--panel);border:1px solid var(--panel-bd);
+         box-shadow:var(--panel-sh);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+         border-radius:var(--radius-lg);padding:14px 16px;
+         transition:background .5s var(--ease), border-color .5s var(--ease);}
+  #title{left:24px;top:64px;max-width:520px;}
+  #title h1{font-family:var(--font-display);font-size:19px;line-height:1.16;margin:0 0 6px;font-weight:800;letter-spacing:-.02em;color:var(--tx);}
+  #title p{font-size:12px;line-height:1.46;margin:0;color:var(--tx-dim);}
+  #legend{right:24px;top:64px;width:248px;font-size:12px;}
+  #legend>div:first-child{font-family:var(--font-display);font-weight:700;margin-bottom:8px;color:var(--tx);}
+  .row{display:flex;align-items:center;gap:9px;margin:7px 0;color:var(--tx-dim);}
+  .row b{color:var(--tx);}
   .sw{width:28px;height:3px;border-radius:3px;}
-  #formula{left:24px;bottom:24px;max-width:520px;font-size:13px;line-height:1.46;}
-  #formula b{color:var(--ink);}
-  #note{right:24px;bottom:24px;width:245px;font-size:12px;line-height:1.42;color:var(--muted);}
-  button{font:inherit;border:1px solid rgba(20,20,20,.18);background:#fff8ea;border-radius:9px;padding:7px 10px;cursor:pointer;margin-right:6px;}
-  button:hover{background:#fff1d2;}
+  #formula{left:24px;bottom:24px;max-width:520px;font-size:13px;line-height:1.5;color:var(--tx-dim);}
+  #formula b{color:var(--tx);}
+  #note{right:24px;bottom:24px;width:248px;font-size:12px;line-height:1.46;color:var(--tx-dim);}
+  #note b{color:var(--tx);}
+  .legend-sep{border-top:1px solid var(--panel-bd);margin-top:10px;padding-top:10px;color:var(--tx-dim);}
+  button{font:inherit;font-family:var(--font-ui);color:var(--tx-dim);border:1px solid var(--panel-bd);background:var(--accent-dim);border-radius:9px;padding:7px 11px;cursor:pointer;margin-right:6px;transition:color .18s var(--ease),border-color .18s var(--ease);}
+  button:hover{color:var(--tx);border-color:var(--accent);}
   @media(max-width:820px){#legend,#note{display:none;}#title,#formula{right:24px;max-width:none;}}
-  @media(max-width:500px){#title h1{font-size:15px;}#formula{font-size:12px;}}
+  @media(max-width:500px){#title h1{font-size:16px;}#formula{font-size:12px;}}
 </style>
 </head>
 <body>
-<div id="gfnav">
-  <span>Gregg Fleishman</span>
-  <a href="index.html" class="inactive">Geometry Lesson</a>
-  <a href="fleishman-sequence.html" class="inactive">Fleishman Sequence</a>
-  <a href="cube-diagonals.html" class="inactive">Cube Diagonals</a>
-  <a href="lost-triangle.html" class="active">Lost Triangle</a>
-  <a href="rhombic-dodecahedron.html" class="inactive">Rhombic Dodecahedron</a>
-  <a href="vector-house.html" class="inactive">Vector House</a>
-  <a href="silver-triangle.html" class="inactive">Silver Triangle</a>
-  <a href="poster/poster.html" class="inactive">Poster</a>
-</div>
+<nav id="gfnav">
+  <a class="brand" href="index.html">Gregg Fleishman</a>
+  <a class="navlink" href="index.html">Geometry Lesson</a>
+  <a class="navlink active" href="mathematics.html">The Lost Triangle</a>
+  <a class="navlink" href="fleishman-sequence.html">Fleishman Sequence</a>
+  <a class="navlink" href="cube-diagonals.html">Cube Diagonals</a>
+  <a class="navlink" href="rhombic-dodecahedron.html">Rhombic Dodecahedron</a>
+  <a class="navlink" href="vector-house.html">Vector House</a>
+  <a class="navlink" href="silver-triangle.html">Silver Triangle</a>
+  <a class="navlink" href="poster/poster.html">Poster</a>
+  <button class="gf-toggle" id="gfThemeToggle" type="button" aria-label="Switch to light mode">
+    <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+  </button>
+</nav>
 <div id="wrap">
   <canvas id="scene"></canvas>
 
@@ -61,13 +71,13 @@
   </div>
 
   <div id="legend" class="panel">
-    <div style="font-weight:700;margin-bottom:8px;">Measurements</div>
-    <div class="row"><span class="sw" style="background:var(--unit)"></span><span>unit edge = <b>1</b></span></div>
-    <div class="row"><span class="sw" style="background:var(--face)"></span><span>face diagonal = <b>√2</b></span></div>
-    <div class="row"><span class="sw" style="background:var(--space)"></span><span>space diagonal = <b>√3</b></span></div>
-    <div class="row"><span class="sw" style="background:var(--tri)"></span><span>proof triangle = <b>1 · √2 · √3</b></span></div>
-    <div class="row"><span class="sw" style="background:var(--angle)"></span><span>exact angle = <b>35.264°</b></span></div>
-    <div style="border-top:1px solid rgba(20,20,20,.1);margin-top:10px;padding-top:10px;color:var(--muted);">Drag to orbit · scroll to zoom<br><br><button id="replay">Replay</button><button id="pause">Pause</button></div>
+    <div>Measurements</div>
+    <div class="row"><span class="sw" style="background:var(--geo-unit)"></span><span>unit edge = <b>1</b></span></div>
+    <div class="row"><span class="sw" style="background:var(--geo-face)"></span><span>face diagonal = <b>√2</b></span></div>
+    <div class="row"><span class="sw" style="background:var(--geo-space)"></span><span>space diagonal = <b>√3</b></span></div>
+    <div class="row"><span class="sw" style="background:var(--geo-tri)"></span><span>proof triangle = <b>1 · √2 · √3</b></span></div>
+    <div class="row"><span class="sw" style="background:var(--geo-angle)"></span><span>exact angle = <b>35.264°</b></span></div>
+    <div class="legend-sep">Drag to orbit · scroll to zoom<br><br><button id="replay">Replay</button><button id="pause">Pause</button></div>
   </div>
 
   <div id="formula" class="panel">
@@ -92,7 +102,8 @@
   const camera = new THREE.PerspectiveCamera(42,1,0.01,100);
   camera.up.set(0,0,1);
 
-  const colors = { ink:0x141414, grid:0xd9d2c3, unit:0x1769ff, face:0xe2811f, space:0xd9295f, tri:0x23a76d, angle:0x927400, ghost:0xb4a896 };
+  const colors = GF_SCENE.active();              // night/paper palette, shared with the instrument
+  GF_SCENE.onChange(GF_SCENE.reload);            // rebuild the scene in the new palette on toggle
   const O = new THREE.Vector3(0,0,0);
   const X = new THREE.Vector3(1,0,0);
   const Y = new THREE.Vector3(0,1,0);
@@ -142,7 +153,7 @@
     const cv=document.createElement('canvas'); cv.width=512; cv.height=160;
     const ctx=cv.getContext('2d');
     ctx.font='700 64px Inter, Arial, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.lineWidth=9; ctx.strokeStyle='rgba(246,242,232,.96)'; ctx.strokeText(text,256,80);
+    ctx.lineWidth=9; ctx.strokeStyle=colors.halo; ctx.strokeText(text,256,80);
     ctx.fillStyle=color; ctx.fillText(text,256,80);
     const tex=new THREE.CanvasTexture(cv);
     const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false,opacity:0});
@@ -162,23 +173,23 @@
   animLine(new THREE.Vector3(-.32,0,0),new THREE.Vector3(1.45,0,0),colors.ink,.15,.7,.72);
   animLine(new THREE.Vector3(0,-.32,0),new THREE.Vector3(0,1.45,0),colors.ink,.15,.7,.72);
   animLine(new THREE.Vector3(0,0,-.05),new THREE.Vector3(0,0,1.38),colors.ink,.3,.7,.72);
-  label('x',new THREE.Vector3(1.55,0,0),'#141414',.13,.8);
-  label('y',new THREE.Vector3(0,1.55,0),'#141414',.13,.8);
-  label('z',new THREE.Vector3(0,0,1.5),'#141414',.13,.8);
+  label('x',new THREE.Vector3(1.55,0,0),colors.ink,.13,.8);
+  label('y',new THREE.Vector3(0,1.55,0),colors.ink,.13,.8);
+  label('z',new THREE.Vector3(0,0,1.5),colors.ink,.13,.8);
 
   animLine(O,X,colors.unit,.85,.65,1); animLine(O,Y,colors.unit,1.08,.65,1); animLine(X,A,colors.unit,1.28,.55,.85); animLine(Y,A,colors.unit,1.42,.55,.85);
-  label('1',new THREE.Vector3(.5,-.1,0),'#1769ff',.14,1.25);
-  label('1',new THREE.Vector3(-.1,.5,0),'#1769ff',.14,1.35);
+  label('1',new THREE.Vector3(.5,-.1,0),colors.unit,.14,1.25);
+  label('1',new THREE.Vector3(-.1,.5,0),colors.unit,.14,1.35);
 
   const cubeEdges = [[O,X],[O,Y],[X,A],[Y,A],[Z,new THREE.Vector3(1,0,1)],[Z,new THREE.Vector3(0,1,1)],[new THREE.Vector3(1,0,1),B],[new THREE.Vector3(0,1,1),B],[O,Z],[X,new THREE.Vector3(1,0,1)],[Y,new THREE.Vector3(0,1,1)],[A,B]];
   cubeEdges.forEach(function(e,i){fadeObj(staticLine(e[0],e[1],colors.ghost,.22),1.55+i*.025,.4,.42);});
 
   animLine(O,A,colors.face,2.05,.9,1);
-  label('√2',new THREE.Vector3(.58,.58,-.12),'#e2811f',.17,2.65);
+  label('√2',new THREE.Vector3(.58,.58,-.12),colors.face,.17,2.65);
   animLine(A,B,colors.unit,3.0,.75,1);
-  label('1',new THREE.Vector3(1.12,1.08,.5),'#1769ff',.15,3.35);
+  label('1',new THREE.Vector3(1.12,1.08,.5),colors.unit,.15,3.35);
   animLine(O,B,colors.space,3.75,.95,1);
-  label('√3',new THREE.Vector3(.45,.45,.62),'#d9295f',.18,4.35);
+  label('√3',new THREE.Vector3(.45,.45,.62),colors.space,.18,4.35);
 
   const triGeo=new THREE.BufferGeometry();
   triGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array([O.x,O.y,O.z,A.x,A.y,A.z,B.x,B.y,B.z]),3));
@@ -187,9 +198,9 @@
   animLine(O,A,colors.tri,4.45,.35,.65); animLine(A,B,colors.tri,4.55,.35,.65); animLine(O,B,colors.tri,4.65,.35,.65);
 
   dot(O,colors.ink,.035,.6); dot(X,colors.unit,.028,1.15); dot(Y,colors.unit,.028,1.15); dot(A,colors.face,.04,2.65); dot(B,colors.space,.045,4.45);
-  label('O',new THREE.Vector3(-.09,-.08,.02),'#141414',.13,.75);
-  label('A',new THREE.Vector3(1.1,1.1,-.04),'#141414',.13,2.7);
-  label('B',new THREE.Vector3(1.1,1.1,1.08),'#141414',.13,4.45);
+  label('O',new THREE.Vector3(-.09,-.08,.02),colors.ink,.13,.75);
+  label('A',new THREE.Vector3(1.1,1.1,-.04),colors.ink,.13,2.7);
+  label('B',new THREE.Vector3(1.1,1.1,1.08),colors.ink,.13,4.45);
 
   function arc(center,u,v,r,a0,a1,color,opacity,segments){
     const pts=[]; for(let i=0;i<=segments;i++){ const a=a0+(a1-a0)*i/segments; pts.push(center.clone().add(u.clone().multiplyScalar(Math.cos(a)*r)).add(v.clone().multiplyScalar(Math.sin(a)*r))); }
@@ -199,21 +210,21 @@
   const up=new THREE.Vector3(0,0,1);
   const theta=Math.atan(1/Math.sqrt(2));
   fadeObj(arc(O,baseDir,up,.32,0,theta,colors.angle,.95,48),4.8,.55,.95);
-  label('35.264°',new THREE.Vector3(.32,.32,.12),'#927400',.12,5.05);
+  label('35.264°',new THREE.Vector3(.32,.32,.12),colors.angle,.12,5.05);
   const down=new THREE.Vector3(0,0,-1);
   const bhoriz=O.clone().sub(B).sub(down.clone().multiplyScalar(O.clone().sub(B).dot(down))).normalize();
   fadeObj(arc(B,down,bhoriz,.27,0,Math.PI/2-theta,colors.angle,.95,48),5.0,.55,.95);
-  label('54.736°',new THREE.Vector3(.76,.76,.72),'#927400',.12,5.25);
+  label('54.736°',new THREE.Vector3(.76,.76,.72),colors.angle,.12,5.25);
 
   function rightAngle(){
     const g=new THREE.Group(); const r=.13, p1=A.clone().add(baseDir.clone().multiplyScalar(-r)), p2=p1.clone().add(up.clone().multiplyScalar(r)), p3=A.clone().add(up.clone().multiplyScalar(r));
     g.add(staticLine(p1,p2,colors.ink,.8)); g.add(staticLine(p2,p3,colors.ink,.8)); g.add(staticLine(p3,A,colors.ink,.8)); scene.add(g); return g;
   }
   fadeObj(rightAngle(),5.15,.45,.9);
-  label('90°',new THREE.Vector3(.9,.9,.16),'#141414',.105,5.35);
+  label('90°',new THREE.Vector3(.9,.9,.16),colors.ink,.105,5.35);
 
   fadeObj(arc(O,new THREE.Vector3(1,0,0),new THREE.Vector3(0,1,0),.46,0,Math.PI/4,colors.ghost,.65,32),5.45,.45,.65);
-  label('45° plan',new THREE.Vector3(.46,.18,.02),'#6b665d',.105,5.65);
+  label('45° plan',new THREE.Vector3(.46,.18,.02),colors.muted,.105,5.65);
   fadeObj(arc(O,new THREE.Vector3(-1,0,0),new THREE.Vector3(0,1,0),.62,0,Math.PI*3/4,colors.ghost,.5,32),5.7,.55,.5);
 
   canvas.addEventListener('mousedown',function(e){dragging=true;px=e.clientX;py=e.clientY;});
