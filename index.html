@@ -3,17 +3,24 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
-<meta name="theme-color" content="#080c12"/>
+<meta name="theme-color" content="#0B0B0B"/>
 <title>Gregg Fleishman — The Geometry Lesson</title>
 <link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/gf-tokens.css">
 <style>
 :root{
-  --bg-top:#0d1726; --bg-mid:#0a0f18; --bg-bot:#05080e;
-  --panel:rgba(10,15,24,.72); --panel-bd:rgba(255,255,255,.12);
-  --tx:rgba(255,255,255,.92); --tx-dim:rgba(255,255,255,.46); --tx-faint:rgba(255,255,255,.26);
-  --chip:rgba(255,255,255,.08); --accent:#4d88ff;
-  --font:Inter,-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Arial,sans-serif;
-  --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  /* Retargeted to the GF design system (gf-tokens.css). Variable names kept
+     so every component rule below inherits the brand values unchanged. */
+  --bg-top:#161616; --bg-mid:#0B0B0B; --bg-bot:#070707;
+  --panel:rgba(20,20,20,.74); --panel-bd:#252525;
+  --tx:#F0EDE8; --tx-dim:#8A8480; --tx-faint:#4A4643;
+  --chip:rgba(240,237,232,.06); --accent:#C8A96E;
+  --font:'Space Grotesk',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --mono:'Space Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --font-display:'Syne',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;font-family:var(--font);
@@ -25,13 +32,9 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 #infobox .it{font-size:12.5px;font-weight:600;color:var(--tx);margin-bottom:5px;letter-spacing:-.01em;}
 #infobox .ib{font-size:12px;line-height:1.5;color:var(--tx-dim);}
 
-/* ---- shared site nav ---- */
-#gfnav{position:fixed;top:0;left:0;right:0;z-index:70;min-height:46px;display:flex;justify-content:center;align-items:center;gap:6px;padding:7px 16px;background:rgba(6,9,14,.84);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-bottom:.5px solid rgba(255,255,255,.08);}
-#gfnav span{font-size:10px;font-weight:600;color:rgba(255,255,255,.34);letter-spacing:.11em;text-transform:uppercase;margin-right:4px;white-space:nowrap;}
-#gfnav a{font-size:11.5px;font-weight:560;text-decoration:none;padding:5px 10px;border-radius:8px;transition:all .18s;white-space:nowrap;}
-#gfnav a.active{background:rgba(255,255,255,.14);color:rgba(255,255,255,.94);border:.5px solid rgba(255,255,255,.24);}
-#gfnav a.inactive{background:rgba(255,255,255,.045);color:rgba(255,255,255,.54);border:.5px solid rgba(255,255,255,.1);}
-#gfnav a:hover{color:rgba(255,255,255,.92);background:rgba(255,255,255,.11);}
+/* ---- shared site nav — base styling from gf-tokens.css #gfnav;
+       compact + fixed override here for the full-screen instrument ---- */
+#gfnav{position:fixed;top:0;left:0;right:0;min-height:46px;gap:18px;padding:0 18px;}
 
 /* ---- top bar ---- */
 #top{position:fixed;top:46px;left:0;right:0;z-index:40;height:52px;display:flex;align-items:center;
@@ -71,8 +74,8 @@ canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:
 /* ---- stage caption (center top) ---- */
 #cap{position:fixed;top:108px;left:50%;transform:translateX(-50%);z-index:25;text-align:center;
   pointer-events:none;max-width:min(620px,86vw);transition:opacity .5s ease;}
-#capnum{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:600;}
-#captitle{font-size:clamp(17px,4.4vw,23px);font-weight:600;letter-spacing:-.01em;margin-top:3px;}
+#capnum{font-family:var(--font-display);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+#captitle{font-family:var(--font-display);font-size:clamp(18px,4.4vw,25px);font-weight:700;letter-spacing:-.02em;margin-top:5px;}
 #capbody{font-size:clamp(12px,3vw,13.5px);line-height:1.5;color:var(--tx-dim);margin-top:7px;}
 #capconf{display:inline-block;margin-top:9px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
   padding:3px 10px;border-radius:8px;border:.5px solid var(--panel-bd);background:var(--chip);color:var(--tx-faint);}
@@ -116,9 +119,7 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 
 /* ---- responsive ---- */
 @media(max-width:720px){
-  #gfnav{justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-left:10px;padding-right:10px;}
-  #gfnav span{font-size:10px;}
-  #gfnav a{font-size:11px;padding:5px 10px;}
+  #gfnav{gap:12px;padding:0 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   #layers{width:150px;left:10px;padding:11px 11px;}
   #cap{top:102px;}
   #stagelabel{min-width:70px;font-size:10px;}
@@ -145,23 +146,23 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 </style>
 </head>
 <body>
-<div id="gfnav">
-  <span>Gregg Fleishman</span>
-  <a href="index.html" class="active">Geometry Lesson</a>
-  <a href="fleishman-sequence.html" class="inactive">Fleishman Sequence</a>
-  <a href="cube-diagonals.html" class="inactive">Cube Diagonals</a>
-  <a href="lost-triangle.html" class="inactive">Lost Triangle</a>
-  <a href="rhombic-dodecahedron.html" class="inactive">Rhombic Dodecahedron</a>
-  <a href="vector-house.html" class="inactive">Vector House</a>
-  <a href="silver-triangle.html" class="inactive">Silver Triangle</a>
-  <a href="poster/poster.html" class="inactive">Poster</a>
-</div>
+<nav id="gfnav">
+  <a class="brand" href="index.html">Gregg Fleishman</a>
+  <a class="navlink active" href="index.html">Geometry Lesson</a>
+  <a class="navlink" href="mathematics.html">The Lost Triangle</a>
+  <a class="navlink" href="fleishman-sequence.html">Fleishman Sequence</a>
+  <a class="navlink" href="cube-diagonals.html">Cube Diagonals</a>
+  <a class="navlink" href="rhombic-dodecahedron.html">Rhombic Dodecahedron</a>
+  <a class="navlink" href="vector-house.html">Vector House</a>
+  <a class="navlink" href="silver-triangle.html">Silver Triangle</a>
+  <a class="navlink" href="poster/poster.html">Poster</a>
+</nav>
 <div id="bg"></div>
 <canvas id="c"></canvas>
 <div id="infobox"><div class="it"></div><div class="ib"></div></div>
 
 <div id="top">
-  <div id="brand"><b>GREGG FLEISHMAN</b> · The Geometry Lesson</div>
+  <div id="brand">The Geometry Lesson</div>
   <button id="gear" aria-label="Settings">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     <span>Settings</span>
@@ -209,9 +210,9 @@ body.minimal #capbody,body.minimal #brand{display:none;}
 /* ════════ THEMES ════════ */
 const THEMES = {
   night:{ label:'Gregg Night', sub:'Dark · glowing geometry',
-    bg:['#0d1726','#0a0f18','#05080e'], fog:0x080c12, fogD:0.052,
-    grid:0x16263c, ghost:0x33507a, ink:0xdce6f5,
-    unit:0x4d88ff, face:0xff8c3a, space:0xff3366, tri:0x3effa0, angle:0xffcc55,
+    bg:['#161616','#0B0B0B','#070707'], fog:0x0B0B0B, fogD:0.052,
+    grid:0x252525, ghost:0x383838, ink:0xF0EDE8,
+    unit:0xF0EDE8, face:0x4A90D9, space:0xE0349E, tri:0x3CCB8E, angle:0xC8A96E,
     xA:0xff5555, yA:0x55ff77, zA:0x4d88ff, sketch:0.62, minimal:false },
   paper:{ label:'Paper Sketch', sub:'Off-white · pencil feel',
     bg:['#fffaf0','#f6f2e8','#e7ddca'], fog:0xefe9da, fogD:0.040,
@@ -699,11 +700,17 @@ function applyTheme(name){
     r.setProperty('--panel','rgba(255,250,240,.84)');r.setProperty('--panel-bd','rgba(20,20,20,.14)');
     r.setProperty('--tx','rgba(20,20,20,.92)');r.setProperty('--tx-dim','rgba(20,20,20,.55)');
     r.setProperty('--tx-faint','rgba(20,20,20,.34)');r.setProperty('--chip','rgba(20,20,20,.05)');r.setProperty('--accent','#1769ff');
+  }else if(name==='night'){
+    /* GF design system — canonical night theme (gf-tokens.css values) */
+    r.setProperty('--panel','rgba(20,20,20,.74)');r.setProperty('--panel-bd','#252525');
+    r.setProperty('--tx','#F0EDE8');r.setProperty('--tx-dim','#8A8480');
+    r.setProperty('--tx-faint','#4A4643');r.setProperty('--chip','rgba(240,237,232,.06)');
+    r.setProperty('--accent','#C8A96E');
   }else{
     r.setProperty('--panel','rgba(10,15,24,.74)');r.setProperty('--panel-bd','rgba(255,255,255,.12)');
     r.setProperty('--tx','rgba(255,255,255,.92)');r.setProperty('--tx-dim','rgba(255,255,255,.46)');
     r.setProperty('--tx-faint','rgba(255,255,255,.26)');r.setProperty('--chip','rgba(255,255,255,.08)');
-    r.setProperty('--accent',name==='present'?'#7aa8ff':'#4d88ff');
+    r.setProperty('--accent','#7aa8ff');
   }
 }
 
