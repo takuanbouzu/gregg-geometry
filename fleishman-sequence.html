@@ -454,6 +454,7 @@
       <button class="phase-btn active" data-phase="A">Phase A — Lost Triangle</button>
       <button class="phase-btn" data-phase="B">Phase B — Rhombic Dodecahedron</button>
       <button class="phase-btn" data-phase="C">Phase C — Space Filling</button>
+      <button class="phase-btn" data-phase="D">Phase D — Vector System</button>
     </div>
 
     <div id="threejs-root">
@@ -466,6 +467,10 @@
       <!-- Phase C sub-controls -->
       <div class="fls-subctrl" id="fls-subctrl-C" style="display:none;">
         <button id="fls-c-lattice">Show cube lattice</button>
+      </div>
+      <!-- Phase D sub-controls -->
+      <div class="fls-subctrl" id="fls-subctrl-D" style="display:none;">
+        <button id="fls-d-highlight">Highlight a joint</button>
       </div>
       <div class="fls-hint">Drag to orbit · scroll to zoom</div>
     </div>
@@ -1562,7 +1567,9 @@ window.FleishmanSequence = {
     B: { t: 'Phase B — Cube → Rhombic Dodecahedron',
          b: 'Add a square pyramid (height = ½ unit) to each face of the cube. The result: 12 identical diamond faces. Every face is a rhombus with angles 71° (≈ 2×35°) and 109° (≈ 2×55°) — directly from the Lost Triangle. This is Gregg\'s "Rhombicube."' },
     C: { t: 'Phase C — Space-Filling Array',
-         b: 'The Rhombic Dodecahedron tiles 3D space with no gaps and no overlaps. It is the Voronoi cell of the FCC lattice — meaning it\'s the natural "territory" around each point in the densest sphere packing. Gregg built this geometry at human scale: Sky Portal X, festival structures, permanent installations.' }
+         b: 'The Rhombic Dodecahedron tiles 3D space with no gaps and no overlaps. It is the Voronoi cell of the FCC lattice — meaning it\'s the natural "territory" around each point in the densest sphere packing. Gregg built this geometry at human scale: Sky Portal X, festival structures, permanent installations.' },
+    D: { t: 'Phase D — The Vector System',
+         b: 'How the geometry becomes buildable. Every vertex of the Rhombic Dodecahedron becomes an octagonal <strong>node</strong> (a point), and every edge becomes a flat plywood <strong>member</strong> (a vector). The members lock into the nodes slot-to-slot with a single pin — no metal fasteners. Because the node facets are cut at the Lost Triangle\'s angles, the abstract sequence and the physical structure are the same object. This is the system behind Otic Oasis, the Temple of Whollyness, and Sky Portal X.' }
   };
   var infoEl = document.getElementById('phase-info-text');
   function setInfo(ph) {
@@ -1826,10 +1833,81 @@ window.FleishmanSequence = {
   groupC.scale.set(0.42, 0.42, 0.42);
 
   // ===================================================================
+  // PHASE D — The Vector System (nodes + members = the buildable joint)
+  // ===================================================================
+  var groupD = new THREE.Group();
+  groupD.visible = false;
+  scene.add(groupD);
+
+  // physical palette: dark melamine faces + birch-ply edges/nodes
+  var D_FACE = new THREE.Color('#2B2533');   // dark aubergine melamine (the broad faces)
+  var D_PLY  = new THREE.Color('#C9A77B');   // baltic-birch laminate (nodes + exposed edges)
+  var dFaceMat = new THREE.MeshStandardMaterial({ color: D_FACE, roughness: 0.7, metalness: 0.0 });
+  var dNodeMat = new THREE.MeshStandardMaterial({ color: D_PLY,  roughness: 0.85, metalness: 0.0 });
+  var dPlyLine = new THREE.LineBasicMaterial({ color: D_PLY, transparent: true, opacity: 0.55 });
+
+  (function buildD() {
+    var quads = rdQuads(1.0);
+    function vkey(v) { return v.x.toFixed(3) + ',' + v.y.toFixed(3) + ',' + v.z.toFixed(3); }
+    var vseen = {}, verts = [];
+    var eseen = {}, edges = [];
+    function addV(v) { var k = vkey(v); if (!(k in vseen)) { vseen[k] = 1; verts.push(v.clone()); } }
+    function addE(a, b) {
+      var ka = vkey(a), kb = vkey(b);
+      var k = ka < kb ? ka + '|' + kb : kb + '|' + ka;
+      if (!(k in eseen)) { eseen[k] = 1; edges.push([a.clone(), b.clone()]); }
+    }
+    quads.forEach(function (q) {
+      for (var i = 0; i < 4; i++) { addV(q[i]); addE(q[i], q[(i + 1) % 4]); }
+    });
+
+    // --- members: a flat plank centred on each edge, broad face turned outward ---
+    var WIDTH = 0.34, THICK = 0.09, GAP = 0.26; // GAP = clearance for the node at each end
+    var _yUp = new THREE.Vector3(0, 1, 0);
+    edges.forEach(function (e) {
+      var a = e[0], b = e[1];
+      var mid = a.clone().add(b).multiplyScalar(0.5);
+      var yDir = b.clone().sub(a); var len = yDir.length(); yDir.normalize();
+      var radial = mid.clone(); if (radial.lengthSq() < 1e-6) radial.copy(_yUp); radial.normalize();
+      // z = thickness axis ≈ radial, made perpendicular to the member's length
+      var z = radial.clone().addScaledVector(yDir, -radial.dot(yDir));
+      if (z.lengthSq() < 1e-6) z.set(1, 0, 0).addScaledVector(yDir, -yDir.x);
+      z.normalize();
+      var x = new THREE.Vector3().crossVectors(yDir, z).normalize();
+      var basis = new THREE.Matrix4().makeBasis(x, yDir, z);
+      var geo = new THREE.BoxGeometry(WIDTH, Math.max(len - GAP, 0.05), THICK);
+      var mesh = new THREE.Mesh(geo, dFaceMat);
+      mesh.position.copy(mid); mesh.setRotationFromMatrix(basis);
+      groupD.add(mesh);
+      var ol = new THREE.LineSegments(new THREE.EdgesGeometry(geo), dPlyLine);
+      ol.position.copy(mid); ol.setRotationFromMatrix(basis);
+      groupD.add(ol);
+    });
+
+    // --- nodes: an octagonal plate at each vertex, face turned outward ---
+    var NODE_R = 0.3, NODE_T = 0.22;
+    groupD.userData.nodeWorld = [];
+    verts.forEach(function (p) {
+      var geo = new THREE.CylinderGeometry(NODE_R, NODE_R, NODE_T, 8); // 8 sides = octagon
+      var radial = p.clone(); if (radial.lengthSq() < 1e-6) radial.copy(_yUp); radial.normalize();
+      var q = new THREE.Quaternion().setFromUnitVectors(_yUp, radial);
+      var mesh = new THREE.Mesh(geo, dNodeMat);
+      mesh.position.copy(p); mesh.quaternion.copy(q);
+      groupD.add(mesh);
+      var ol = new THREE.LineSegments(new THREE.EdgesGeometry(geo), dPlyLine);
+      ol.position.copy(p); ol.quaternion.copy(q);
+      groupD.add(ol);
+      groupD.userData.nodeWorld.push(p.clone());
+    });
+  })();
+  groupD.scale.set(1.05, 1.05, 1.05);
+
+  // ===================================================================
   // PHASE SWITCHING
   // ===================================================================
   var phase = 'A';
   var autoRotateA = true;
+  var autoRotateD = true;
 
   // Single shared home camera position — all phases start from here
   var CAM_HOME = { pos: V(4.5, 3.5, 4.5), tgt: V(0, 0, 0) };
@@ -1845,20 +1923,24 @@ window.FleishmanSequence = {
 
   var subB = document.getElementById('fls-subctrl-B');
   var subC = document.getElementById('fls-subctrl-C');
+  var subD = document.getElementById('fls-subctrl-D');
 
   function setPhase(ph) {
     phase = ph;
     groupA.visible = (ph === 'A');
     groupB.visible = (ph === 'B');
     groupC.visible = (ph === 'C');
+    groupD.visible = (ph === 'D');
     subB.style.display = (ph === 'B') ? 'flex' : 'none';
     subC.style.display = (ph === 'C') ? 'flex' : 'none';
+    subD.style.display = (ph === 'D') ? 'flex' : 'none';
 
     setInfo(ph);
     tweenCamera(CAM_HOME.pos, CAM_HOME.tgt, 60);
 
     if (ph === 'A') { autoRotateA = true; }
     if (ph === 'B') { bAnim.active = true; bAnim.t = 0; }
+    if (ph === 'D') { autoRotateD = true; dHighlightBtn.classList.remove('on'); }
 
     var btns = document.querySelectorAll('#threejs-controls .phase-btn');
     btns.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-phase') === ph); });
@@ -1868,7 +1950,7 @@ window.FleishmanSequence = {
     b.addEventListener('click', function () { setPhase(b.getAttribute('data-phase')); });
   });
 
-  controls.addEventListener('start', function () { autoRotateA = false; });
+  controls.addEventListener('start', function () { autoRotateA = false; autoRotateD = false; });
 
   document.getElementById('fls-b-animate').addEventListener('click', function () {
     bAnim.active = true; bAnim.t = 0;
@@ -1884,6 +1966,25 @@ window.FleishmanSequence = {
   cLatticeBtn.addEventListener('click', function () {
     latticeGroup.visible = !latticeGroup.visible;
     cLatticeBtn.classList.toggle('on', latticeGroup.visible);
+  });
+
+  // Phase D — frame a single node up close so the joint reads clearly
+  var dHighlightBtn = document.getElementById('fls-d-highlight');
+  dHighlightBtn.addEventListener('click', function () {
+    var on = !dHighlightBtn.classList.contains('on');
+    dHighlightBtn.classList.toggle('on', on);
+    if (on) {
+      autoRotateD = false;
+      groupD.rotation.y = 0; // snap to home orientation so the framed node is predictable
+      var nodes = groupD.userData.nodeWorld || [];
+      var target = nodes.length ? nodes[0].clone() : V(0, 0, 0);
+      nodes.forEach(function (n) { if (n.y > target.y) target.copy(n); }); // highest node = clean framing
+      target.multiplyScalar(groupD.scale.x);
+      tweenCamera(target.clone().add(V(2.4, 1.6, 2.4)), target, 50);
+    } else {
+      autoRotateD = true;
+      tweenCamera(CAM_HOME.pos, CAM_HOME.tgt, 50);
+    }
   });
 
   // ---------- resize ----------
@@ -1917,6 +2018,10 @@ window.FleishmanSequence = {
 
     if (phase === 'A' && autoRotateA && !tween) {
       groupA.rotation.y += 0.003;
+    }
+
+    if (phase === 'D' && autoRotateD && !tween) {
+      groupD.rotation.y += 0.003;
     }
 
     if (phase === 'B' && bAnim.active) {
