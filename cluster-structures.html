@@ -69,11 +69,25 @@
 
   body.clean #controls, body.clean #gfnav{opacity:0;pointer-events:none}
   body.clean #capwrap{bottom:7vh}
+
+  /* graceful fallback — shown only if WebGL is unavailable or a dependency fails to load */
+  #fallback{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+    padding:32px;text-align:center;background:var(--bg);color:var(--tx-dim);font-family:var(--font-ui)}
+  #fallback .in{max-width:440px}
+  #fallback h2{font-family:var(--font-display);font-weight:800;color:var(--tx);font-size:22px;margin:0 0 12px}
+  #fallback p{font-size:14px;line-height:1.6;margin:0}
+  #fallback a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="assets/vendor/gsap-3.12.5/gsap.min.js"></script>
 </head>
 <body>
   <div id="stage"></div>
+
+  <div id="fallback"><div class="in">
+    <h2>Cluster-Structures</h2>
+    <p>This animation needs a current browser with WebGL. Try the latest Chrome, Firefox, or Safari — or read <a href="mathematics.html">The Lost Triangle</a>.</p>
+  </div></div>
+  <noscript><div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;text-align:center;color:var(--tx-dim);font-family:var(--font-ui)">This animation needs JavaScript. Read <a href="mathematics.html" style="color:var(--accent)">The Lost Triangle</a>.</div></noscript>
 
   <nav id="gfnav">
     <a class="brand" href="index.html">Gregg Fleishman</a>
@@ -112,11 +126,17 @@
     </select>
   </div>
 
+<script>
+  /* if the scene hasn't booted in 8s (e.g. a dependency failed to load), reveal the fallback */
+  window.__bootTimer = setTimeout(function(){
+    if (!window.__booted){ var f = document.getElementById('fallback'); if (f) f.style.display = 'flex'; }
+  }, 8000);
+</script>
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    "three": "./assets/vendor/three-0.160.0/three.module.js",
+    "three/addons/": "./assets/vendor/three-0.160.0/addons/"
   }
 }
 </script>
@@ -144,7 +164,9 @@ if (clean) document.body.classList.add('clean');
 
 /* ---------- renderer / scene / camera rig ---------- */
 const stage = document.getElementById('stage');
-const renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true }); }
+catch (e){ const f = document.getElementById('fallback'); if (f) f.style.display = 'flex'; throw e; }
 renderer.setClearColor(COL.bg, 1);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 stage.appendChild(renderer.domElement);
@@ -575,6 +597,7 @@ gsap.ticker.add((time, deltaTime)=>{
 resize();
 tl.play();
 setPlayIcon();
+window.__booted = true; clearTimeout(window.__bootTimer);   // scene is up — keep the fallback hidden
 </script>
 </body>
 </html>

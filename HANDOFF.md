@@ -17,6 +17,14 @@ branch serves it; update only if a custom domain is used).
 - **Vector House is HIDDEN** — removed from the nav site-wide (file kept, reachable only by direct
   URL) and its visible dev-note stripped, pending confirmation with Gregg of the DXF-derived values
   (`M = 66√2`, etc.) and the "Vector House"/"silver fold" vocabulary. Re-add to nav once confirmed.
+- **Future-proofed (self-contained):** all runtime JS is **vendored** under `assets/vendor/`
+  (`three-0.160.0/` ESM + `addons/lines/` for the movies, `three-r128/three.min.js` for the six
+  global deep-dives, `gsap-3.12.5/`). No CDN at runtime — verified via resource-timing that every
+  page loads three/gsap from `/assets/vendor/` with zero CDN calls. To bump a version, replace the
+  vendored file and re-point the `<script>`/import-map. The movies show a graceful WebGL/no-JS
+  fallback (`#fallback` + an 8s boot timer). A root `.nojekyll` stops GitHub Pages mangling the
+  static tree. **Only remaining external dep:** Google Fonts (graceful fallback; vendor later if a
+  fully-offline archive is wanted).
 - **To go live:** in the repo's **Settings → Pages**, set Source = "Deploy from a branch", Branch =
   **`codex-web-build`**, folder = `/ (root)`. (Claude can't toggle Pages.) The site appears at
   `https://takuanbouzu.github.io/gregg-geometry/`. If a custom domain is used, update the `og:`/

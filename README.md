@@ -46,6 +46,15 @@ python3 -m http.server 8000
 # then open http://localhost:8000/
 ```
 
+## Dependencies
+
+All runtime libraries are **vendored** under `assets/vendor/` — Three.js r160 (ESM) + its
+`lines` addons for the movies, Three.js r128 for the older deep-dives, and GSAP 3.12.5. No CDN
+is needed at runtime, so the exhibit keeps working even if a CDN changes or drops a version.
+The only external load is the web fonts (Google Fonts), which degrade gracefully to system
+fallbacks. The movie pages also show a graceful message if WebGL is unavailable, and a
+`.nojekyll` file keeps GitHub Pages from touching the static files.
+
 ## Credits
 
 Original drawings, artworks, and the underlying geometric work are by **Gregg Fleishman**.
