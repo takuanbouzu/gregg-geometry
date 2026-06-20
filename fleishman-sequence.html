@@ -31,7 +31,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* width:100% gives body a definite width tied to the viewport. Without it,
+       body (a flex item of the flex html) sizes to its content's max width and
+       overflows narrow screens, defeating every max-width:100% below it. */
+    width: 100%;
+    max-width: 100%;
   }
+  body { overflow-x: hidden; }
 
   /* ── Page header ─────────────────────────────────────────────────────── */
   #page-header {
@@ -57,6 +63,7 @@
     align-items: flex-start;
     gap: 0;
     width: 1000px;
+    max-width: 100%;
   }
 
   #canvas-wrap {
@@ -132,6 +139,7 @@
     background: var(--dim);
     border-left: 2px solid var(--edge);
     white-space: pre;
+    overflow-x: auto;
   }
 
   .info-cta {
@@ -160,6 +168,7 @@
     justify-content: center;
     gap: 20px;
     width: 1000px;
+    max-width: 100%;
     padding: 20px 0;
   }
 
@@ -222,6 +231,29 @@
     text-align: center;
     border-top: 1px solid #1E2433;
     margin-top: 0;
+  }
+
+  /* ── Responsive: below ~1040px the 1000px row would overflow. Stack the
+        info panel under the canvas and let the canvas scale down. The 700×430
+        drawing buffer is unchanged — only its CSS display size shrinks. ───── */
+  @media (max-width: 1040px) {
+    #main-row { flex-direction: column; align-items: center; }
+    #canvas-wrap { flex: 0 0 auto; width: 100%; max-width: 700px; }
+    #c { width: 100%; height: auto; }
+    #info-panel {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 700px;
+      height: auto;
+      border-left: 1px solid var(--edge);
+    }
+  }
+
+  @media (max-width: 560px) {
+    #page-header { padding: 24px 20px 0; }
+    #page-footer { padding: 28px 20px; }
+    #app { padding: 24px 12px 0; }
+    #nav-row { gap: 10px; }
   }
 </style>
 </head>
@@ -1400,6 +1432,27 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft'  && step > 0)               setStep(step - 1);
 });
 
+// Horizontal swipe on the 2D canvas → prev/next step (mobile).
+(() => {
+  let x0 = null, y0 = null;
+  const THRESH = 40; // px; horizontal travel needed to register a swipe
+  canvas.addEventListener('touchstart', (e) => {
+    const t = e.changedTouches[0];
+    x0 = t.clientX; y0 = t.clientY;
+  }, { passive: true });
+  canvas.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - x0, dy = t.clientY - y0;
+    // only act on a mostly-horizontal swipe past the threshold
+    if (Math.abs(dx) > THRESH && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0 && step < TOTAL_STEPS - 1) setStep(step + 1);  // swipe left → next
+      else if (dx > 0 && step > 0)          setStep(step - 1);  // swipe right → prev
+    }
+    x0 = y0 = null;
+  }, { passive: true });
+})();
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 buildDots();
 updateInfo(0);
@@ -1440,6 +1493,27 @@ window.FleishmanSequence = {
 
   var root = document.getElementById('threejs-root');
   if (!root) { console.error('[fls-3d] #threejs-root not found.'); return; }
+
+  // ---------- WebGL capability check ----------
+  // If WebGL is unavailable, show a graceful message instead of a blank box.
+  (function () {
+    var ok = false;
+    try {
+      var test = document.createElement('canvas');
+      ok = !!(window.WebGLRenderingContext &&
+              (test.getContext('webgl') || test.getContext('experimental-webgl')));
+    } catch (e) { ok = false; }
+    if (!ok) {
+      root.innerHTML = '<div style="position:absolute;inset:0;display:flex;' +
+        'align-items:center;justify-content:center;text-align:center;padding:32px;' +
+        'font-family:\'Space Mono\',monospace;font-size:13px;line-height:1.7;' +
+        'color:#475060;">Your browser doesn\'t support WebGL, so the interactive ' +
+        '3D model can\'t be shown.<br>The 2D sequence above covers the same geometry ' +
+        '(Steps&nbsp;0–5).</div>';
+    }
+    root.__webglOK = ok;
+  })();
+  if (!root.__webglOK) { return; }
 
   // ---------- info text per phase ----------
   var INFO = {
