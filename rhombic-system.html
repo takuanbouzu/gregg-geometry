@@ -84,6 +84,9 @@ const canvas = document.getElementById('c');
 const R = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
 R.setPixelRatio(Math.min(devicePixelRatio,2));
 R.setClearColor(0,0);
+// Fixed, camera-independent draw order — stops overlapping translucent faces and
+// coincident lines from re-sorting (and colour-flickering) as the solid rotates.
+R.sortObjects = false;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42,1,0.01,100);
@@ -258,6 +261,14 @@ function setPhase(p){
   document.getElementById('pdesc').innerHTML=PHASES[p].desc;
   document.getElementById('legbody').innerHTML=PHASES[p].leg;
 }
+
+/* Fixed paint order: faces under spheres under lines under labels. Pairs with
+   sortObjects=false so the renderer never re-orders these per frame. */
+scene.traverse(function(o){
+  if(o.isSprite) o.renderOrder = 3;
+  else if(o.isLine) o.renderOrder = 2;
+  else if(o.isMesh) o.renderOrder = (o.geometry && o.geometry.type === 'SphereGeometry') ? 1 : 0;
+});
 
 // ---- camera ----
 var az=-1.85, el=0.44, rad=7.2;
