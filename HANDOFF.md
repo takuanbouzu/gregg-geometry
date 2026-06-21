@@ -27,8 +27,48 @@ branch serves it; update only if a custom domain is used).
   fully-offline archive is wanted).
 - **To go live:** in the repo's **Settings → Pages**, set Source = "Deploy from a branch", Branch =
   **`codex-web-build`**, folder = `/ (root)`. (Claude can't toggle Pages.) The site appears at
-  `https://takuanbouzu.github.io/gregg-geometry/`. If a custom domain is used, update the `og:`/
-  `twitter:` URLs in `index.html`.
+  `https://takuanbouzu.github.io/gregg-geometry/`. **LIVE** as of 2026-06-20.
+
+---
+
+## Graphical QA watchlist (recurring glitch classes — check these on every change)
+
+Several glitches surfaced and were fixed this session; they form a pattern to keep watching for —
+especially after any geometry, camera, or theme change, and on both night + paper.
+
+1. **Label-on-fill contrast** — a colour-coded label over a fill of its own colour vanishes
+   (the `√3` magenta label on the magenta triangle). FIX PATTERN: give labels a `var(--bg)` halo
+   (`paint-order:stroke`) — done on `lost-triangle-construction.html`. WATCH: any label that can
+   land on same-colour fill (movies' sprite labels, instrument, deep-dives).
+2. **Axis-view perspective asymmetry** — looking down an axis at a 3-D solid, perspective makes the
+   near half bigger, so "silhouette" beats (square, hexagon) come out lopsided. FIX: long-lens /
+   dolly-zoom flatten (fov 34→8) on `cluster-structures` square+hex. WATCH: any other "look down an
+   axis / read the silhouette" framing (e.g. `rhombic-dodecahedron.html`, `cube-diagonals.html`).
+3. **Ghost/construction lines lingering over hero geometry** — lines with no end-stage persist and
+   clutter later beats (the cube ghost over the Lost Triangle at instrument Stage 6, capped at
+   `maxStage:5`). WATCH: persistent construction layers across stages 6–10 and on deep-dives.
+4. **Edge-on fat-line artifacts** — `Line2` fat lines viewed near edge-on balloon into ribbons (the
+   old fleishman fold artifact, resolved by the stand-up rework). WATCH: any beat where a fat-line
+   plane swings edge-on to camera during a move.
+5. **Z-fighting / fill-over-outline** — coincident fills + outlines need `renderOrder` / `depthWrite:false`
+   / overlay handling (instrument uses overlay+depthTest-off; movies use `renderOrder`). WATCH: new
+   coincident geometry, and the stand-up triangle landing on the cube's diagonal.
+6. **Theme-flip integrity** — every colour must come from tokens / `GF_SCENE`, halos from `var(--bg)`,
+   so night AND paper both read. WATCH: any hard-coded hex or one-theme assumption.
+7. **Caption / label clipping & overlap** — labels overrunning the caption bar, clipping the frame,
+   or the title card sitting on the jewel (handled via the darkened lower band). WATCH: new labels
+   near frame edges or the bottom caption.
+8. **Responsive / portrait framing** — the movies' camera `z`/fov are tuned for 16:9; portrait crops
+   the framing and the nav scrolls horizontally. WATCH: mobile.
+
+## Open decisions (for Gregg / the Claude Design review)
+
+- **Angle display precision** — `arctan(1/√2) ≈ 35.264°` is irrational; reference pages show full
+  precision, the fleishman movie currently shows `35.26°`. Left as-is pending Gregg; a plain-English
+  "note on the angles" was added to `mathematics.html` §2. Decide a single convention with Gregg.
+- **Vector House** — hidden pending confirmation of the DXF values + vocabulary (see Pre-share).
+- **Next phase:** review + strategy in Claude Design — see `docs/CLAUDE-DESIGN-REVIEW.md` (parametric
+  "adjustable through inputs" feasibility + bandwidth estimate).
 
 ---
 
