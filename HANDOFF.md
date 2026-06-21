@@ -1,6 +1,6 @@
 # Gregg Geometry — Session Handoff
 
-_Last updated: 2026-06-20. Repo: `~/Code/gregg-geometry`. SSH remote `takuanbouzu/gregg-geometry`; the shareable build is on **`codex-web-build`** (pushed). `main` is a separate, older "deploy design pass" (cream default, hamburger menu, view switcher) — intentionally left untouched; reconcile later if wanted._
+_Last updated: 2026-06-20 (session 2). Repo: `~/Code/gregg-geometry`. SSH remote `takuanbouzu/gregg-geometry`; the shareable build is on **`codex-web-build`** (pushed). `main` is a separate, older "deploy design pass" (cream default, hamburger menu, view switcher) — intentionally left untouched; reconcile later if wanted._
 
 This is the live handoff for the next Claude Code session. Read it first.
 
@@ -124,20 +124,24 @@ Three shared assets in `assets/` drive everything:
 
 ## Page inventory (all themeable, dark default)
 
+Current nav order (9 items): The Lost Triangle · Construction 2D · Construction 3D · Fleishman Sequence · Cluster Structures · Research · Rhombic System · Silver Triangle · Poster.
+
 | File | What it is | Theme mechanism |
 |---|---|---|
 | `index.html` | The instrument (3D Geometry Lesson) | nav toggle ↔ `applyTheme` bridge |
 | `mathematics.html` | "The Lost Triangle" narrative + links to constructions | CSS tokens |
 | `fleishman-sequence.html` | ~44s √2-sequence movie (Three.js ESM + GSAP) | `GF_SCENE` + reload |
 | `lost-triangle.html` | Lost-Triangle 3D orbit viewer | `GF_SCENE` + reload |
-| `cube-diagonals.html` | Cube diagonals 3D | `GF_SCENE` + reload |
-| `rhombic-dodecahedron.html` | Rhombic dodecahedron 3D | `GF_SCENE` + reload |
+| `cube-diagonals.html` | Cube diagonals 3D — **ORPHANED from nav** (reachable by direct URL; replaced by rhombic-system) | `GF_SCENE` + reload |
+| `rhombic-dodecahedron.html` | Rhombic dodecahedron 3D — **ORPHANED from nav** (reachable by direct URL; replaced by rhombic-system) | `GF_SCENE` + reload |
+| `rhombic-system.html` | **NEW** 24s sequential animation: cube diagonals → pyramid construction → rhombic dodecahedron | `GF_SCENE` + reload |
 | `silver-triangle.html` | Silver triangle / σ=1+√2 3D | `GF_SCENE` + reload |
 | `vector-house.html` | Vector House DXF/fold 3D — **HIDDEN from nav** (see Pre-share status) | `GF_SCENE` + reload |
 | `poster/poster.html` | Print poster (fixed cream SVG) + frame | tokens (print stays cream) |
 | `lost-triangle-construction.html` | GSAP 2D SVG construction (1:√2:√3) | live CSS-var recolor |
 | `lost-triangle-construction-3d.html` | GSAP 2D→3D construction | `GF_SCENE` + reload |
 | `cluster-structures.html` | ~62s MathPoster continuation movie (rhombicube → truncation → gold jewel) | `GF_SCENE` + reload |
+| `dorman-luke.html` | Research page on Dorman Luke construction (nav label: "Research") with caveat banner | CSS tokens |
 
 `docs/dorman-luke-duality-research.md` — research report on Dorman Luke construction + dual polyhedra lineage. Reference only; not yet a page.
 
@@ -349,12 +353,51 @@ sole place it surfaces so far — extend only if it proves useful.
 "The Lost Triangle" and "Fleishman Sequence". Active state corrected on both construction
 pages (was pointing at mathematics.html; now each page marks itself active).
 
-### 4. Build the Dorman Luke interactive lesson (PRIORITY 3)
+### ✅ 4. DONE — `dorman-luke.html` research page built + nav restructure (2026-06-20 session 2)
 
-See `docs/dorman-luke-duality-research.md` §7 for the full spec. New themed page using
-`gf-tokens` + `gf-theme` + `gf-scene`.
+**Built `dorman-luke.html`:** research page with a "RESEARCH NOTE" caveat banner (this is
+research that emerged from the project, not a finished interactive lesson). Content:
+Observation, Construction (6 numbered steps), Architectural Terms (blockquote), Lineage
+(5 thinker cards: Kepler → Voronoi → Coxeter → Steinitz → Dorman Luke), The Gap, References.
+Attribution: Research · White Cube Society · June 2026.
 
-### 5. Push to GitHub (only when asked)
+**Renamed "Dorman Luke" → "Research" in nav** across all 13 pages (root pages + poster).
+The page's body text uses "Dorman Luke" as the name of the mathematical construction —
+those references are untouched. Only the nav link text and `<title>` were renamed.
+
+**Fleishman sequence caption fix:** "Gregg's √2 doesn't stop at the triangle" →
+**"The Lost Triangle rises into space"** (informed by Gregg's hand sketch showing the
+stand-up geometry with √3/√2/1/35.25°/53.725° labels and 45°/120° slot joint detail).
+
+### ✅ 5. DONE — Rhombic System merge (2026-06-20 session 2)
+
+**Merged `cube-diagonals.html` + `rhombic-dodecahedron.html` → `rhombic-system.html`**,
+a single 24-second looping sequential animation. Three acts:
+
+1. **Cube Diagonals (0–8s)** — unit cube with edge/face-diagonal/space-diagonal lines drawing
+   on, key triangle (1² + (√2)² = (√3)²), angle label 35°. Info panel + legend update live.
+2. **Raising the Pyramids (8–16s)** — six square pyramids grow from the cube faces; apex
+   interpolates from face-centre to pole position using dynamic `BufferAttribute.needsUpdate`
+   per frame. Pole spheres appear, pyramid triangle meshes + apex-to-corner edges drawn.
+3. **Rhombic Dodecahedron (16–24s)** — pyramid triangles fade; 12 colored rhombic faces
+   bloom in by group (blue: xy-plane, orange: xz-plane, green: yz-plane); diagonal labels
+   "1" and "√2" on face 0; slow fade-out, then loop.
+
+**Nav reduced 10 → 9 items** across all 13 pages: "Cube Diagonals" + "Rhombic Dodecahedron"
+removed; replaced with single "Rhombic System" link. Old files (`cube-diagonals.html`,
+`rhombic-dodecahedron.html`) remain in the repo as orphaned pages, reachable by direct URL.
+
+**Mobile panel bug** (`#legend`, `#note` not hiding on mobile in `rhombic-dodecahedron.html`):
+the `@media(max-width:820px){#legend,#note{display:none;}}` rule was already in the file at
+line 44. The fix was present locally — it just needed the push to be live on GitHub Pages.
+Same for the mobile nav overflow: `overflow-x:auto; -webkit-overflow-scrolling:touch` is
+already in `gf-tokens.css` at the 720px breakpoint.
+
+**All changes pushed to `codex-web-build`** (commit `2f99e2e`).
+
+---
+
+### 6. Push to GitHub (only when asked)
 
 SSH remote is configured (account `takuanbouzu`). Push only when user explicitly requests.
 
@@ -375,7 +418,8 @@ SSH remote is configured (account `takuanbouzu`). Push only when user explicitly
 
 ## Commits to date (newest first)
 
+- `2f99e2e` Nav restructure: Dorman Luke→Research, merge cube diagonals + rhombic dodecahedron into Rhombic System
+- `3129cc0` (prior session) Build fleishman-sequence + cluster-structures movies, promote construction pages, add dorman-luke
 - `Convert fleishman-sequence to the GF system with light/dark`
 - `Reskin the 6 legacy pages to the GF system with light/dark`
 - `Make the GF design system themeable + add a shared light/dark toggle`
-- Plus in-progress: two construction pages + dorman-luke research + mathematics.html links
