@@ -421,10 +421,11 @@ line(A,B,'unit',{stage:3,grow:true,desc:{t:'The lift = 1',b:'Raising one corner 
 dot(B,'space',.04,{stage:3,layer:'labels'});
 label('1',new THREE.Vector3(1.15,1.08,.5),'unit',.15,{stage:3,layer:'ratios'});
 label('B',new THREE.Vector3(1.12,1.13,1.13),'ink',.13,{stage:3});
-// the other 3 cube verticals (ghost) — distinct edges, no overlap
-line(O,Z0,'ghost',{stage:3,layer:'cube',maxOp:.26});
-line(X,X1,'ghost',{stage:3,layer:'cube',maxOp:.26});
-line(Y,Y1,'ghost',{stage:3,layer:'cube',maxOp:.26});
+// the other 3 cube verticals (ghost) — distinct edges, no overlap. Retire after the
+// proof stages so they don't clutter the Lost Triangle in the stage 6+ investigations.
+line(O,Z0,'ghost',{stage:3,maxStage:5,layer:'cube',maxOp:.26});
+line(X,X1,'ghost',{stage:3,maxStage:5,layer:'cube',maxOp:.26});
+line(Y,Y1,'ghost',{stage:3,maxStage:5,layer:'cube',maxOp:.26});
 // space diagonal √3
 line(O,B,'space',{stage:3,grow:true,desc:{t:'Space diagonal = √3',b:'The diagonal through the cube body. (√2)² + 1² = 3 → √3 — the hypotenuse of the Lost Triangle.'}});
 label('√3',new THREE.Vector3(.44,.44,.66),'space',.18,{stage:3,layer:'ratios'});
@@ -452,8 +453,9 @@ label('54.736°',new THREE.Vector3(1.16,1.12,.78),'angle',.12,{stage:4,layer:'an
   const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints([p0,p1,p2]),m);
   reg(ln,{stage:4,layer:'angles',maxOp:.85,overlay:true});
 })();
-// top square (the remaining 4 cube edges) — completes the 12-edge cube with NO duplicates
-[[Z0,X1],[X1,B],[B,Y1],[Y1,Z0]].forEach(function(s){line(s[0],s[1],'ghost',{stage:4,layer:'cube',maxOp:.3});});
+// top square (the remaining 4 cube edges) — completes the 12-edge cube with NO duplicates.
+// Capped at stage 5 so the ghost cube clears before the stage 6+ investigation.
+[[Z0,X1],[X1,B],[B,Y1],[Y1,Z0]].forEach(function(s){line(s[0],s[1],'ghost',{stage:4,maxStage:5,layer:'cube',maxOp:.3});});
 
 /* ════════ STAGE 5 — XYZ AXES ════════ */
 line(O,new THREE.Vector3(1.6,0,0),'xA',{stage:5,layer:'axes',maxOp:.7});
