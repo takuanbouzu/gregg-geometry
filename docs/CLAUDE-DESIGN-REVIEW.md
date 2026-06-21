@@ -1,82 +1,135 @@
-# Claude Design — review & strategy brief
+# Gregg Fleishman exhibit — purpose, vision & next-phase plan
 
-_For the next phase: review the live exhibit in Claude Design and decide how far to push
-"each component more accurate and adjustable through inputs." Written 2026-06-20._
+_The pass-on doc. Read this first, then `../HANDOFF.md` for the operational state. Written 2026-06-20._
 
-## Snapshot
+---
 
-- **Live:** https://takuanbouzu.github.io/gregg-geometry/ — GitHub Pages, branch `codex-web-build`.
-- **Self-contained:** all runtime JS vendored under `assets/vendor/` (no CDN); only Google Fonts load
-  externally (graceful fallback). The HTML is plain + static, so it imports/reviews cleanly.
-- **Built this session:** the two movies (Fleishman Sequence, Cluster-Structures), the dashed
-  motion-guide language, the stand-up rework, the symmetry theory note, the share + future-proofing
-  pass, plus targeted graphics fixes (label haloing, Stage-6 ghost cleanup, axis-view perspective
-  flatten). See `HANDOFF.md` for the full state and the **Graphical QA watchlist**.
+## 1. Why this exists — the north star
 
-## Component inventory (what could become adjustable)
+Gregg's goal is not to archive his work or to generate clever new architecture. It is to
+**pass on wisdom that is overlooked.**
 
-| Component | Today | Already interactive? |
-|---|---|---|
-| Instrument (`index.html`) | 10-stage lesson, orbit/zoom, layer toggles, stages | **Yes** — most parametric already |
-| Movies (`fleishman-sequence`, `cluster-structures`) | choreographed films; scrub/speed/replay, `?clean=1` | Timeline only (geometry is fixed) |
-| Deep-dives (`lost-triangle`, `cube-diagonals`, `rhombic-dodecahedron`, `silver-triangle`) | 3-D orbit/zoom viewers | **Yes** — orbit, no parameter inputs |
-| Constructions (`*-construction*.html`) | animated step-by-step (2-D + 3-D) | Timeline only |
-| Poster | fixed print plate | No (by design) |
+The wisdom is **tacit** — the felt sense of how the Lost Triangle (`1 : √2 : √3`) wants to unfold,
+where it goes next, why it's inevitable. Polanyi: _"we know more than we can tell."_ A proof or a
+diagram hands over the *facts*; the *wisdom* only deposits **through the hand, by building it over
+and over** until the eye catches up. Gregg built his way into seeing it. There is no shortcut that
+skips the building.
 
-## "More accurate" — mostly a sign-off task, not engineering
+That is also **why it's overlooked**: tacit knowledge doesn't survive in the channels knowledge
+usually travels — papers, drawings, lectures. It lives in the hands of the person who won it, and
+dies with them unless someone recreates the conditions to **re-win** it.
 
-The geometry is already mathematically exact (rhombic dodecahedron, the 26-face truncation, the
-1 : √2 : √3 triangle, `arctan(1/√2)` angles — all verified). What's left under "accurate" is
-**editorial, gated on Gregg**, not code:
+> **North star: the exhibit is a machine for re-winning, by hand, what Gregg won by hand.**
+> Not an explainer. Not an archive. Not a CAD tool.
 
-- Confirm the Vector House DXF values (`M = 66√2`, etc.) and the "Vector House" / "silver fold"
-  vocabulary → then un-hide the page.
-- Decide the angle-precision convention (rounded vs `35.264°`).
-- Optional 1:1 fidelity adds (e.g. the red √4 "next-root" triangles in the fleishman opener) — small,
-  contained code.
+**The one test for every decision:** _does this get hands building, or does it just explain?_
 
-Net: near-zero engineering for "accuracy"; the bottleneck is Gregg's confirmation.
+(Audience: don't pre-select. It transmits to *anyone willing to build the loops* — the ones who
+keep building are the ones it reaches.)
 
-## "Adjustable through inputs" — feasibility, in three tiers
+---
 
-**Tier A — cheap, high ROI (the already-interactive pages).** The deep-dives already orbit/zoom and
-their geometry is built by parameterisable functions. Add a small set of sliders/number-fields bound
-to existing builders: truncation amount `t` (rhombicube), array/neighbour count (space-fill), fold
-angle (Vector House), silver-ratio `σ` exploration, viewing axis. The instrument's Stage 5
-("Interactive Controls") is the natural home for live manipulation. **Worth doing.**
+## 2. What the north star reframes
 
-**Tier B — build the framework once.** A shared, themed **parametric control panel** that extends the
-GF design system (sliders/toggles/number inputs that match the nav + sun/moon toggle). Build once,
-reuse on every page cheaply. This is the smart investment that makes Tier A fast everywhere.
+- **Stage 1 (the hand-sketch) is sacred.** It's the one place Gregg is a *person* who saw
+  something — the human carrier of tacit knowledge. Keep it; honor it. It is not cuttable.
+- **The proof pages are scaffolding.** They get out of the way. The *doing* is the content.
+- **The sandbox is the heart — but it's a construction kit, not a parameter panel.** Verbs, not
+  sliders: *place* a cell, *reflect* it, *fold* it, *truncate* it, *add* a neighbour, *again*. Each
+  loop deposits a little tacit insight no caption could.
+- **"Non-destructive" is for repetition, not just safety.** You can only build over and over if you
+  can fail and reset endlessly. Free, fast, forgiving loops *are* the transmission channel.
+- **Don't over-explain.** The hand leads, the eye follows, the mind clicks last — the reverse of
+  the usual "explain, then demo."
 
-**Tier C — heavy, diminishing returns.** Making the **movies** fully adjustable fights their nature —
-they're choreographed films and their value is the narrative. Better to pair a movie with a separate
-"explore" page, or expose just 1–2 params in a paused mode (the cluster truncation `t` is already a
-parameter — cheap to surface). A universal "every value adjustable" CAD-style rebuild is essentially
-a new product (multi-week). **Recommend selective, not wholesale.**
+---
 
-## Bandwidth estimate (rough, in focused half-day sessions)
+## 3. Build architecture — canon + sandbox, non-destructive by design
+
+1. **One geometry core** (`assets/gf-geometry.js`, sibling to `gf-tokens`/`gf-scene`): named
+   parameters with Gregg's confirmed values as the **locked canonical default preset**. Every page
+   reads from it. Canon lives in exactly one place, so it can't drift.
+2. **Edits are overrides, never mutations:** `params = { ...CANON, ...overrides }`. "Reset to Gregg"
+   = drop the overrides. There is nothing to undo because the source was never touched — that *is*
+   non-destructive.
+3. **Two surfaces, one engine:** the **Exhibit** (everything live today — canonical, locked, the
+   authoritative story) and a separate **Lab/Studio** (the live engine + construction kit). You
+   cannot break the exhibit from the Lab. Separation is the safety.
+4. **Provenance is already invented** — the instrument's `CONFIRMED GEOMETRY` vs
+   `INVESTIGATION · NOT PROVEN` badge. Carry it through: anything dialed off Gregg's defaults
+   auto-flags **exploratory**, so an experiment is never mistaken for his confirmed work.
+5. **Shareable states:** encode params in the URL (`?p=…`). An experiment becomes a *link* — to send
+   Gregg, or pull into Claude Design. Non-destructive **and** collaborative.
+
+---
+
+## 4. The recursion landmine — resolve before building "fractal / unfold"
+
+"Fractal" hides a real choice. **The rhombic dodecahedron does NOT self-subdivide into smaller
+rhombic dodecahedra** the way a cube splits into 8 cubes. Build a naïve "fractal depth" on that
+assumption and the geometry is a lie. The honest, **Gregg-grounded** recursions:
+
+- **The truncation cascade** — rhombicube → Truncated Rhombicube → *Great* Truncated (GT)
+  Rhombicube → … Genuinely recursive, exact, and **already documented on his 2005 MathPoster**
+  (the "GT" forms). _Lowest risk, maximum provenance — this is the v1._
+- **FCC multi-scale packing** — the FCC lattice is self-similar under scaling by 2, so cell-clusters
+  can legitimately nest at multiple scales (the "buildable bone" idea). A later move.
+
+Pick the rule first; *then* the "unfold" interaction means something.
+
+---
+
+## 5. First real step — the smallest thing that proves the pattern
+
+1. Extract **one** component — the Cluster-Structures rhombic cell + truncation — into the geometry
+   core (`gf-geometry.js`).
+2. Stand up a bare **Lab** page driven by build-moves: build the cell, truncate it, step the cascade
+   depth — with **"reset to Gregg"** and a **shareable URL**.
+3. One page proves the whole pattern (canon / override / non-destructive / build-over-and-over);
+   everything else is reuse.
+
+Do **not** start with breadth (every component adjustable) or the full fractal lattice — prove the
+loop on one component first.
+
+---
+
+## 6. Where to build it — Code vs Claude Design (honest)
+
+- **Claude Design** (claude.ai/design): great for diverging on the **visual look** of the Lab —
+  mockups, aesthetic directions, layout feel. It **cannot** touch this repo, run the geometry,
+  verify in a browser, or deploy.
+- **Claude Code**: builds, refactors, runs + verifies in a live preview, commits, deploys. The
+  geometry core, the non-destructive state model, URL experiments, the Lab itself — **all Code.**
+
+**Recommendation:** build in a **fresh Claude Code session** reading this doc + `../HANDOFF.md`. Use
+Claude Design when you want to explore how the Lab should *look* before/while building it.
+
+---
+
+## 7. Bandwidth (rough, in focused half-day sessions) — reframed from *sliders* to *build-moves*
 
 | Work | Estimate |
 |---|---|
-| Shared themed control-panel component (Tier B framework) | ~1 session |
-| Wire meaningful sliders into 3 deep-dive pages (Tier A) | ~1–1.5 sessions |
-| Instrument Stage-5 live-manipulation controls | ~1 session |
-| Surface `t` (+ maybe ratio) as a paused "explore" control in Cluster-Structures | ~0.5–1 session |
-| **Strong "adjustable v1" across the interactive pages** | **~4–5 sessions** |
-| Movies-as-sandboxes / every-value-adjustable (Tier C) | + several sessions each, sharp ROI drop |
+| Extract one component into the geometry core + bare Lab + non-destructive overrides + URL state | ~1–2 sessions |
+| Truncation-cascade recursion in the core | ~1 session |
+| Construction-kit build-moves UI (the verbs) + provenance flagging | ~1–2 sessions |
+| **Strong "build-over-and-over v1" on one component** | **~3–4 sessions** |
+| Reuse across the other components, once the pattern's proven | cheap, incremental |
+| Movies-as-sandboxes / every-value-adjustable | sharp ROI drop — defer/skip |
 
-## Recommendation
+"More accurate" remains a **Gregg sign-off** task (values, vocabulary, angle convention), not
+engineering — the code is ready for it.
 
-1. **Build the shared control-panel component, then add sliders to the pages that are already
-   interactive** (deep-dives + instrument). Highest ratio of insight-per-effort.
-2. **Leave the movies as films** — optionally one or two "explore" toggles, not a full sandbox.
-3. **Skip the universal parametric rebuild** unless the goal becomes a teaching-tool *product*.
-4. **"More accurate" = get Gregg's sign-off** (values, vocabulary, angle convention); the code is
-   ready for it.
+---
 
-## Open decisions to settle in the review
+## 8. Current state & pointers
 
-- Angle convention (rounded vs precise) — pending Gregg.
-- Vector House data/vocabulary — pending Gregg; page hidden until confirmed.
-- How far to take parametric controls (Tier A only, or A+B, or beyond).
+- **Live:** https://takuanbouzu.github.io/gregg-geometry/ — GitHub Pages, branch `codex-web-build`,
+  fully self-contained (runtime JS vendored under `assets/vendor/`, no CDN).
+- **`../HANDOFF.md`** — operational source of truth, page inventory, and the **Graphical QA
+  watchlist** (recurring glitch classes: label-on-fill contrast, axis-view perspective, lingering
+  ghost lines, edge-on fat lines, z-fighting, theme-flip, clipping, responsive).
+- **Open decisions for Gregg:** angle-display convention (rounded vs `35.264°`); Vector House DXF
+  values + "Vector House"/"silver fold" vocabulary (page currently hidden from nav until confirmed).
+- **Source material:** `docs/reference/` (the design brief + Gregg's drawings), the 2005 MathPoster
+  (in Drive `01_INCOMING/`), `docs/dorman-luke-duality-research.md`.
