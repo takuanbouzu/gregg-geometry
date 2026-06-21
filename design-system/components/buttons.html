@@ -1,0 +1,30 @@
+<!-- @dsCard group="Components" name="Buttons" subtitle="Fill · outline" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GF · Buttons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Space+Grotesk:wght@400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../gf-tokens.css">
+<style>
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--font-ui);padding:48px;}
+  .lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-faint);margin:0 0 16px;}
+  .set{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:36px;}
+</style>
+</head>
+<body>
+  <div class="lbl">Default</div>
+  <div class="set">
+    <a class="gf-btn-fill" href="#">Begin the lesson</a>
+    <a class="gf-btn-outline" href="#">Read the research</a>
+  </div>
+  <div class="lbl">On a surface panel</div>
+  <div class="set" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:14px;padding:28px;">
+    <a class="gf-btn-fill" href="#">Open the poster</a>
+    <a class="gf-btn-outline" href="#">Construction 3D</a>
+  </div>
+</body>
+</html>

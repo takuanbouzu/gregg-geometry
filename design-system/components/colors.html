@@ -1,0 +1,58 @@
+<!-- @dsCard group="Foundation" name="Color tokens" subtitle="Dark · light palettes + geometry roles" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GF · Color tokens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../gf-tokens.css">
+<style>
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--font-ui);padding:44px;}
+  h1{font-family:var(--font-display);font-weight:800;font-size:24px;letter-spacing:-.015em;margin:0 0 4px;}
+  .sub{font-family:var(--font-mono);font-size:11px;color:var(--tx-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+  .grp{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-faint);margin:30px 0 12px;}
+  .row{display:flex;flex-wrap:wrap;gap:10px;}
+  .sw{width:118px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .chip{height:54px;}
+  .meta{padding:8px 10px;background:var(--bg-elevated);}
+  .nm{font-size:11px;font-weight:500;color:var(--tx);}
+  .hx{font-family:var(--font-mono);font-size:10px;color:var(--tx-dim);margin-top:2px;}
+</style>
+</head>
+<body>
+  <h1>Color tokens</h1>
+  <div class="sub">Gregg Night — the brand default</div>
+
+  <div class="grp">Ground &amp; chrome · dark</div>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#0B0B0B"></div><div class="meta"><div class="nm">bg</div><div class="hx">#0B0B0B</div></div></div>
+    <div class="sw"><div class="chip" style="background:#141414"></div><div class="meta"><div class="nm">bg-surface</div><div class="hx">#141414</div></div></div>
+    <div class="sw"><div class="chip" style="background:#1D1D1D"></div><div class="meta"><div class="nm">bg-elevated</div><div class="hx">#1D1D1D</div></div></div>
+    <div class="sw"><div class="chip" style="background:#252525"></div><div class="meta"><div class="nm">border</div><div class="hx">#252525</div></div></div>
+    <div class="sw"><div class="chip" style="background:#F0EDE8"></div><div class="meta"><div class="nm">tx</div><div class="hx">#F0EDE8</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8A8480"></div><div class="meta"><div class="nm">tx-dim</div><div class="hx">#8A8480</div></div></div>
+    <div class="sw"><div class="chip" style="background:#C8A96E"></div><div class="meta"><div class="nm">accent</div><div class="hx">#C8A96E</div></div></div>
+  </div>
+
+  <div class="grp">Ground &amp; chrome · light (Paper)</div>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#F4EFE6"></div><div class="meta"><div class="nm">bg</div><div class="hx">#F4EFE6</div></div></div>
+    <div class="sw"><div class="chip" style="background:#FBF7EE"></div><div class="meta"><div class="nm">bg-surface</div><div class="hx">#FBF7EE</div></div></div>
+    <div class="sw"><div class="chip" style="background:#FFFFFF"></div><div class="meta"><div class="nm">bg-elevated</div><div class="hx">#FFFFFF</div></div></div>
+    <div class="sw"><div class="chip" style="background:#1B1B1B"></div><div class="meta"><div class="nm">tx</div><div class="hx">#1B1B1B</div></div></div>
+    <div class="sw"><div class="chip" style="background:#8A6A2F"></div><div class="meta"><div class="nm">accent</div><div class="hx">#8A6A2F</div></div></div>
+  </div>
+
+  <div class="grp">Geometry roles · semantic contract (dark)</div>
+  <div class="row">
+    <div class="sw"><div class="chip" style="background:#F0EDE8"></div><div class="meta"><div class="nm">geo-unit · edge 1</div><div class="hx">#F0EDE8</div></div></div>
+    <div class="sw"><div class="chip" style="background:#4A90D9"></div><div class="meta"><div class="nm">geo-face · √2</div><div class="hx">#4A90D9</div></div></div>
+    <div class="sw"><div class="chip" style="background:#E0349E"></div><div class="meta"><div class="nm">geo-space · √3</div><div class="hx">#E0349E</div></div></div>
+    <div class="sw"><div class="chip" style="background:#3CCB8E"></div><div class="meta"><div class="nm">geo-tri</div><div class="hx">#3CCB8E</div></div></div>
+    <div class="sw"><div class="chip" style="background:#C8A96E"></div><div class="meta"><div class="nm">geo-angle</div><div class="hx">#C8A96E</div></div></div>
+  </div>
+</body>
+</html>

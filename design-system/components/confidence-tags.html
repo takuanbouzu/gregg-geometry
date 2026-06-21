@@ -1,0 +1,29 @@
+<!-- @dsCard group="Components" name="Confidence tags" subtitle="Confirmed · interpreted · hypothesis" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GF · Confidence tags</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../gf-tokens.css">
+<style>
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--font-ui);padding:48px;}
+  .lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-faint);margin:0 0 16px;}
+  .set{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .desc{font-size:13px;color:var(--tx-dim);line-height:1.7;margin-top:24px;max-width:54ch;}
+</style>
+</head>
+<body>
+  <div class="lbl">Provenance tags</div>
+  <div class="set">
+    <span class="conf conf-confirmed">Confirmed geometry</span>
+    <span class="conf conf-interp">Interpreted</span>
+    <span class="conf conf-hyp">Hypothesis</span>
+    <span class="conf">Neutral</span>
+  </div>
+  <p class="desc">Marks how settled a claim is — confirmed values render precise, interpreted and hypothesis values stay rounded and clearly flagged.</p>
+</body>
+</html>

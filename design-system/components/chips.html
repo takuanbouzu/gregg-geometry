@@ -1,0 +1,33 @@
+<!-- @dsCard group="Components" name="Chip row" subtitle="Filter pills · horizontal scroll on mobile" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GF · Chips</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../gf-tokens.css">
+<style>
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:var(--font-ui);padding:48px;}
+  .lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-faint);margin:0 0 16px;}
+</style>
+</head>
+<body>
+  <div class="lbl">Filter chips · one active</div>
+  <div class="gf-chiprow" style="margin-bottom:34px;">
+    <a class="gf-chip active" href="#">All</a>
+    <a class="gf-chip" href="#">Sky Portal</a>
+    <a class="gf-chip" href="#">Nodes</a>
+    <a class="gf-chip" href="#">Furniture</a>
+    <a class="gf-chip" href="#">Pods</a>
+  </div>
+  <div class="lbl">Deep-dive links as chips</div>
+  <div class="gf-chiprow">
+    <a class="gf-chip" href="#">Construction 2D</a>
+    <a class="gf-chip" href="#">Construction 3D</a>
+    <a class="gf-chip" href="#">Silver Triangle</a>
+  </div>
+</body>
+</html>
