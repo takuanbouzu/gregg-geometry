@@ -34,6 +34,7 @@
   --accent:#C8A96E;        /* GOLD — all chrome accents, active states, stage numbers.
                               Replaces #4d88ff for CHROME ONLY.            */
   --accent-dim:rgba(200,169,110,0.10);
+  --accent-text:#0B0B0B;   /* ink that sits ON a gold fill (buttons, chips)        */
 
   /* ---- type ---- */
   --font-display:'Syne',sans-serif;             /* titles, brand, stage numbers   */
@@ -86,6 +87,7 @@
 
   --accent:#8A6A2F;                       /* deepened gold — ~4.6:1 on cream */
   --accent-dim:rgba(138,106,47,0.12);
+  --accent-text:#FFFFFF;                   /* light ON deep-gold fill         */
 
   --geo-unit:#1769FF;                      /* paper-scene edge (blue)        */
   --geo-face:#E2811F;                      /* paper-scene face diagonal      */
@@ -203,3 +205,122 @@ body{
 .gf-toggle .i-moon{ display:block; }
 :root[data-theme="light"] .gf-toggle .i-sun{ display:block; }
 :root[data-theme="light"] .gf-toggle .i-moon{ display:none; }
+
+/* ============================================================
+   RESPONSIVE NAV  ·  hamburger + slide-down menu
+   Progressive enhancement: assets/gf-nav.js wraps the existing
+   #gfnav .navlink set in `.navlinks`, injects `.navburger` and
+   `#gf-mobilemenu`, and adds `gf-nav-ready` to <html>. Pages that
+   don't load gf-nav.js keep the legacy horizontal-scroll nav.
+   ============================================================ */
+.navlinks{ display:contents; }   /* links stay direct flex children of #gfnav on desktop */
+
+.navburger{
+  display:none; width:36px; height:36px; flex-shrink:0;
+  flex-direction:column; align-items:center; justify-content:center; gap:5px;
+  padding:0; border:1px solid var(--border-strong); border-radius:50%;
+  background:var(--nav-bg); cursor:pointer; margin-left:4px;
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  transition:border-color .16s var(--ease);
+}
+.navburger:hover{ border-color:var(--accent); }
+.navburger span{
+  display:block; width:18px; height:1.5px; border-radius:1px; background:var(--tx-dim);
+  transition:transform .26s var(--ease), opacity .2s var(--ease);
+}
+.navburger[aria-expanded="true"] span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+.navburger[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+.navburger[aria-expanded="true"] span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+
+#gf-mobilemenu{
+  position:fixed; top:0; left:0; right:0; z-index:65;
+  background:var(--bg-surface); border-bottom:1px solid var(--border);
+  padding:78px 0 16px;          /* top pad re-set to nav height by gf-nav.js */
+  transform:translateY(-102%); visibility:hidden;
+  transition:transform .34s var(--ease), visibility .34s var(--ease);
+  max-height:100vh; overflow-y:auto;
+}
+#gf-mobilemenu.open{ transform:translateY(0); visibility:visible; }
+#gf-mobilemenu a{
+  display:flex; align-items:center; gap:12px; padding:13px 24px;
+  font-family:var(--font-ui); font-size:15px; letter-spacing:.01em;
+  color:var(--tx-dim); text-decoration:none; border-left:2px solid transparent;
+  transition:color .12s var(--ease), background .12s var(--ease), border-color .12s var(--ease);
+}
+#gf-mobilemenu a:hover, #gf-mobilemenu a:active, #gf-mobilemenu a.active{
+  color:var(--tx); background:var(--accent-dim); border-left-color:var(--accent);
+}
+#gf-mobilemenu .num{ font-family:var(--font-mono); font-size:11px; color:var(--tx-faint); min-width:20px; }
+
+/* Collapse only when the enhancer is present, so non-JS pages keep their nav. */
+@media(max-width:820px){
+  html.gf-nav-ready #gfnav .navlinks{ display:none; }
+  html.gf-nav-ready #gfnav .navburger{ display:flex; }
+  html.gf-nav-ready #gfnav{ overflow:visible; gap:14px; padding:0 18px; min-height:60px; }
+  html.gf-nav-ready #gfnav .gf-toggle{ position:static; box-shadow:none; margin-left:auto; }
+}
+@media(min-width:821px){ #gf-mobilemenu{ display:none; } }
+
+/* ============================================================
+   CARD LIST  ·  thumbnail + text rows  (framework `m-card`)
+   Reusable across pages for project / topic link lists.
+   ============================================================ */
+.gf-cardlist{ display:flex; flex-direction:column; gap:8px; }
+.gf-card{
+  display:flex; align-items:center; gap:14px;
+  background:var(--bg-elevated); border:1px solid var(--border);
+  border-radius:var(--radius-lg); overflow:hidden; text-decoration:none; color:inherit;
+  transition:border-color .16s var(--ease), transform .16s var(--ease);
+}
+a.gf-card:hover{ border-color:var(--border-strong); transform:translateY(-1px); }
+.gf-card-thumb{
+  width:72px; min-width:72px; align-self:stretch; background:var(--bg-surface);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  border-right:1px solid var(--hairline);
+}
+.gf-card-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+.gf-card-body{ padding:13px 16px 13px 0; min-width:0; }
+.gf-card-title{
+  font-family:var(--font-display); font-weight:700; font-size:14.5px;
+  line-height:1.2; color:var(--tx);
+}
+.gf-card-sub{
+  font-family:var(--font-editorial); font-style:italic; font-size:14px;
+  color:var(--tx-dim); margin-top:3px;
+}
+
+/* ============================================================
+   BUTTONS  (framework `btn-fill` / `btn-outline`)
+   ============================================================ */
+.gf-btn-fill, .gf-btn-outline{
+  display:inline-flex; align-items:center; justify-content:center;
+  font-family:var(--font-ui); font-size:12px; font-weight:500;
+  letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
+  padding:14px 32px; border-radius:var(--radius-sm); text-decoration:none;
+  transition:opacity .15s var(--ease), background .15s var(--ease),
+             color .15s var(--ease), border-color .15s var(--ease);
+}
+.gf-btn-fill{ background:var(--accent); color:var(--accent-text); border:1px solid var(--accent); }
+.gf-btn-fill:hover{ opacity:.88; }
+.gf-btn-outline{ background:transparent; color:var(--tx); border:1px solid var(--border-strong); }
+.gf-btn-outline:hover{ background:var(--accent); border-color:var(--accent); color:var(--accent-text); }
+
+/* ============================================================
+   CHIP ROW  ·  horizontal-scroll pills (framework `m-filter-scroll`)
+   Wrap inline links/buttons; on narrow screens they scroll sideways.
+   ============================================================ */
+.gf-chiprow{ display:flex; flex-wrap:wrap; gap:8px; }
+.gf-chiprow .gf-chip{
+  display:inline-flex; align-items:center; white-space:nowrap; flex-shrink:0;
+  padding:8px 16px; border:1px solid var(--border); border-radius:20px;
+  font-family:var(--font-ui); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--tx-dim); text-decoration:none; cursor:pointer;
+  transition:color .12s var(--ease), border-color .12s var(--ease), background .12s var(--ease);
+}
+.gf-chiprow .gf-chip:hover{ color:var(--tx); border-color:var(--border-strong); }
+.gf-chiprow .gf-chip.active{ background:var(--accent); border-color:var(--accent); color:var(--accent-text); }
+@media(max-width:720px){
+  .gf-chiprow{ flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; padding-bottom:4px; }
+  .gf-chiprow::-webkit-scrollbar{ display:none; }
+}
