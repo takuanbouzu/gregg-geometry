@@ -481,17 +481,22 @@ function showCap(el, start, end){
 const morph = { t:0 };
 
 /* camera orientation presets (tuned for each act) */
+// The two axis-silhouette beats use a long lens + big dolly (a near-orthographic
+// "dolly-zoom") so the square and hexagon read as TRUE symmetric figures —
+// perspective foreshortening would otherwise make the near half larger and the
+// six hexagon bands unequal. The 3-D beats keep the normal 34° perspective.
 const VIEW = {
-  cell:   { x:-0.50, y:0.62, z:4.7 },
-  fill:   { x:-0.42, y:0.70, z:7.8 },
-  square: { x:0.00,  y:0.00, z:5.2 },   // look down +Z axis → square silhouette
-  hex:    { x:-0.7854, y:0.6155, z:5.4 }, // look along (1,1,1) → hexagonal silhouette
-  close:  { x:-0.46, y:0.62, z:6.9 }
+  cell:   { x:-0.50, y:0.62, z:4.7,  fov:34 },
+  fill:   { x:-0.42, y:0.70, z:7.8,  fov:34 },
+  square: { x:0.00,  y:0.00, z:22,   fov:8 },   // look down +Z axis → square silhouette (flattened)
+  hex:    { x:-0.7854, y:0.6155, z:22, fov:8 }, // look along (1,1,1) → hexagon silhouette (flattened)
+  close:  { x:-0.46, y:0.62, z:6.9,  fov:34 }
 };
 
 /* lock initial camera + morph at t=0 so Replay / scrub-to-0 reset cleanly */
 tl.set(pivot.rotation, { x:VIEW.cell.x, y:VIEW.cell.y, z:0 }, 0);
 tl.set(camera.position, { z:VIEW.cell.z }, 0);
+tl.set(camera, { fov:VIEW.cell.fov }, 0);
 tl.set(morph, { t:0 }, 0);
 tl.set('#titlecard', { opacity:0 }, 0);
 
@@ -516,6 +521,7 @@ showCap(C.rhombicube, 11.4, 15.8);
 fade(M.neigh, 0.0, 16.0, 1.4);                     // back to one cell for legibility
 tl.to(pivot.rotation, { x:VIEW.square.x, y:VIEW.square.y, duration:3.4, ease:'power2.inOut' }, 16.2);
 tl.to(camera.position, { z:VIEW.square.z, duration:3.4, ease:'power2.inOut' }, 16.2);
+tl.to(camera, { fov:VIEW.square.fov, duration:3.4, ease:'power2.inOut' }, 16.2);   // flatten to a true silhouette (square + hexagon)
 showCap(C.square, 17.2, 22.4);
 fade(M.axis, 0.22, 21.8, 0.6);                      // guide: the (1,1,1) spindle appears just before the turn…
 tl.to(pivot.rotation, { x:VIEW.hex.x, y:VIEW.hex.y, duration:3.6, ease:'power2.inOut' }, 22.6);
@@ -529,9 +535,10 @@ fade(M.cell, 0.0, 30.0, 1.0);
 fade(M.trunc, 0.62, 30.0, 1.0);
 fade(M.cellGhost, 0.20, 31.0, 1.0);                // guide: hold the original cell as a dashed cage…
 fade(M.cellGhost, 0, 44.0, 2.0);                   // …the solid truncates inside it, then regrows to meet it
-// settle to a reading 3/4 and slowly turn through the cut
+// settle to a reading 3/4 and slowly turn through the cut — restore normal perspective
 tl.to(pivot.rotation, { x:VIEW.cell.x, y:VIEW.cell.y, duration:3.0, ease:'power1.inOut' }, 30.2);
 tl.to(camera.position, { z:5.4, duration:3.0, ease:'power1.inOut' }, 30.2);
+tl.to(camera, { fov:VIEW.cell.fov, duration:3.0, ease:'power1.inOut' }, 30.2);
 showCap(C.cut, 30.6, 37.2);
 fade(M.cap, 0.95, 31.4, 1.6);                      // gold caps blossom in
 tl.to(morph, { t:0.5, duration:13.5, ease:'power2.inOut' }, 31.6);
@@ -557,7 +564,7 @@ tl.to({}, { duration:1.2 }, 60.8);                 // tail
 
 const DUR = tl.duration();
 window.__tl = tl;
-window.__seek = (t)=>{ tl.pause(); tl.time(t); updateDraws(t); morphEdges.forEach(e=>e.update(morph.t)); renderer.render(scene, camera); };
+window.__seek = (t)=>{ tl.pause(); tl.time(t); updateDraws(t); morphEdges.forEach(e=>e.update(morph.t)); camera.updateProjectionMatrix(); renderer.render(scene, camera); };
 
 /* ======================================================= *
  *  CONTROLS
@@ -590,6 +597,7 @@ gsap.ticker.add((time, deltaTime)=>{
   }
   if (!scrubbing){ scrub.value = (tl.progress()*1000)|0; }
   tlabel.textContent = (tl.time()).toFixed(1) + 's';
+  camera.updateProjectionMatrix();                 // apply the per-beat fov (axis-view flatten)
   renderer.render(scene, camera);
 });
 
