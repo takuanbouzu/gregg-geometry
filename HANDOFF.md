@@ -1,8 +1,40 @@
 # Gregg Geometry — Session Handoff
 
-_Last updated: 2026-06-20 (session 2). Repo: `~/Code/gregg-geometry`. SSH remote `takuanbouzu/gregg-geometry`; the shareable build is on **`codex-web-build`** (pushed). `main` is a separate, older "deploy design pass" (cream default, hamburger menu, view switcher) — intentionally left untouched; reconcile later if wanted._
+_Last updated: 2026-06-21 (session 3). Repo: `~/Code/gregg-geometry`. SSH remote `takuanbouzu/gregg-geometry`; the shareable build is on **`codex-web-build`** (pushed, latest `ec8b41f`). `main` is a separate, older "deploy design pass" — intentionally left untouched; reconcile later if wanted._
 
-This is the live handoff for the next Claude Code session. Read it first.
+This is the live handoff for the next Claude Code session. Read it first. The **Session 3** block below is the current state; the older sections beneath it are still-valid background.
+
+---
+
+## Session 3 (2026-06-21) — current state
+
+All work this session is committed + pushed to `codex-web-build` (latest `ec8b41f`). Tools: Node at `~/.local/node` (not on PATH); no `gh`; SSH push works. Serve locally from the repo root (`python3 -m http.server`) and open pages directly.
+
+### What shipped this session
+
+1. **`lesson.html` — the one-page scroll lesson (NEW, standalone).** A single persistent WebGL canvas scrubbed by scroll through four acts: cube diagonals → raising the pyramids → rhombic dodecahedron → **Truncated Rhombicube** (Gregg's term — cut every corner the same → 12 √2 faces + 8 corner triangles + 6 pole squares = 26 faces; construction ported from `cluster-structures.html`). Below the 3D stage, editorial sections (Sequence, Clusters, Research, Silver, Poster) scroll over the canvas, each linking to its existing deep-dive page. Hybrid design: existing pages were KEPT as deep-dives.
+2. **Design system: shared responsive nav + components.** `assets/gf-tokens.css` gained `--accent-text` and a reusable component layer — responsive nav (`.navlinks` / `.navburger` / `#gf-mobilemenu`), `.gf-card`/`.gf-cardlist`, `.gf-btn-fill`/`.gf-btn-outline`, `.gf-chiprow` — plus a **canonical `#gfnav`** (sticky, 56px, 14px gap, 0.06em tracking, 20px padding). New `assets/gf-nav.js` is a progressive-enhancement script that auto-builds the hamburger + numbered slide-down menu from each page's existing `.navlink`s and adds `html.gf-nav-ready`. Loaded on all 15 pages.
+3. **Header unified across all pages.** Fixed a run-together-links regression (the `.navlinks` wrapper used `display:contents`, which Safari < 17.4 won't propagate flex `gap` across → now a real flex row with `gap:inherit`). Removed every per-page `#gfnav` override so all pages share the canonical nav; reconciled `index.html`'s overlay offsets (`#top`/`#settings`/`#cap` +10px) to the 56px nav; dropped the duplicate brand row on the Construction 2D/3D headers.
+4. **3D transparency flicker fixed** in `lesson.html` + `rhombic-system.html`: set `renderer.sortObjects = false` and an explicit `renderOrder` (faces<spheres<lines<labels) so overlapping translucent faces / coincident "vector" lines don't re-sort and colour-flicker as the solid rotates.
+5. **`design-system/` — claude.ai/design sync bundle (NEW).** `@dsCard` preview cards (colors, typography, nav, card list, buttons, chips, confidence tags) + `build.sh` + `README.md`. The `gf-tokens.css`/`gf-nav.js` inside it are **generated, git-ignored** copies (run `design-system/build.sh` to refresh from `assets/`). NOT yet pushed to Design — see task below.
+
+### Outstanding — prioritized
+
+1. **BIG DECISION — make `lesson.html` the front door?** Yuto's stated intent is "the whole website should be one page you scroll." `lesson.html` is built but standalone. Promoting it to `index.html` means rehoming the current `index.html` (the full-screen Lost Triangle instrument) to its own URL and repointing brand/nav links. Decide direction before deep further work.
+2. **Verify the flicker fix in a real browser**, then optionally extend the same `sortObjects=false` + `renderOrder` fix to the other bespoke 3D scenes (`index`, `silver-triangle`, `lost-triangle`, `vector-house`, `lost-triangle-construction-3d`) and the off-nav orphans (`cube-diagonals`, `rhombic-dodecahedron`).
+3. **Push the design system to claude.ai/design.** Needs design auth, which was unavailable last env. In an authorized session: `cd design-system && ./build.sh` → `/design-sync` → create project "Gregg Fleishman — GF System" → review/finalize plan (`gf-tokens.css`, `gf-nav.js`, `components/*.html`) → write. Or upload the `design-system/` folder manually on claude.ai/design (the `@dsCard` markers auto-build the cards).
+4. **Nav at narrow widths:** all 9 links fit ≥~1390px; below that the nav horizontally scrolls (intended), ≤820px it's the hamburger. Optionally raise the hamburger breakpoint to ~1200px so 13" laptops get the clean menu instead of a scrolling nav.
+5. **Pre-existing (still open):** Vector House is nav-hidden pending Gregg's sign-off on DXF values (`M = 66√2`) + vocabulary — re-add to nav once confirmed. Angle-precision convention (precise decimals vs rounded — Gregg's call). Parametric / "build-kit" phase (plan in `docs/CLAUDE-DESIGN-REVIEW.md`). Optionally delete the orphaned `cube-diagonals.html` + `rhombic-dodecahedron.html`.
+
+### Principles to honor (learned/confirmed this session)
+
+- **Consistency is the default; a broken pattern must be very intentional.** Drive shared chrome (nav, components) from `gf-tokens.css` + `gf-nav.js` — never per-page overrides.
+- **Gregg's own vocabulary** in narrative captions (Rhombicube, Truncated Rhombicube, "the Lost Triangle stands up"); academic framing (dual polyhedra, Dorman Luke, cuboctahedron) lives only in the Research/essay pages.
+- **Any all-transparent three.js scene** should set `sortObjects=false` + explicit `renderOrder` instead of relying on distance sorting.
+
+### Verify / gotcha
+
+The headless Claude Code **preview pauses `requestAnimationFrame` when the tab is unfocused** — so scroll-driven WebGL looks stale/black mid-scroll and temporal flicker can't be captured there. Verify animations in a real browser. To confirm WebGL renders inside the headless tool: temporarily add `preserveDrawingBuffer:true` to the renderer + a `window.__setT(t)/__anim()` hook, render one frame, `gl.readPixels`, then remove the hooks. Also: the preview caches `gf-tokens.css` across reloads — cache-bust the `<link>` href when testing CSS changes.
 
 ---
 
