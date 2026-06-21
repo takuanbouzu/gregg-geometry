@@ -342,12 +342,12 @@ footnote: the terms only name what Gregg's constructions already do. Per Yuto's 
 symmetry note: a *supporting* lens only (footnote/sidebar), never a primary framework. This is the
 sole place it surfaces so far — extend only if it proves useful.
 
-### 3. Promote construction pages into the global nav (PRIORITY 2)
+### ✅ 3. DONE — Promote construction pages into the global nav (2026-06-20)
 
-`lost-triangle-construction.html` and `lost-triangle-construction-3d.html` are reachable
-only via `mathematics.html`. Add them to the nav on **all pages**. Suggested IA: add between
-"The Lost Triangle" and "Fleishman Sequence" as "Construction 2D" and "Construction 3D".
-`poster/poster.html` needs `../` prefixes on all nav hrefs.
+`lost-triangle-construction.html` ("Construction 2D") and `lost-triangle-construction-3d.html`
+("Construction 3D") added to the nav on all 12 pages (11 root + poster), inserted between
+"The Lost Triangle" and "Fleishman Sequence". Active state corrected on both construction
+pages (was pointing at mathematics.html; now each page marks itself active).
 
 ### 4. Build the Dorman Luke interactive lesson (PRIORITY 3)
 
