@@ -1,0 +1,21 @@
+Continuing work on the Gregg Fleishman geometry exhibit at ~/Code/gregg-geometry
+(branch codex-web-build, pushed). Read HANDOFF.md first — the "Session 3
+(2026-06-21)" block at the top is the current state.
+
+Quick orientation:
+- Static HTML site, no build. Three.js + GSAP, vendored under assets/vendor.
+  Serve from the repo root (python3 -m http.server) and open pages directly.
+  Node is at ~/.local/node (not on PATH); no gh; SSH push works.
+- Shared design system lives in assets/gf-tokens.css (canonical #gfnav + nav/
+  card/button/chip components) + assets/gf-nav.js (auto-hamburger). Drive shared
+  chrome from there, never per-page overrides — consistency is the bar.
+- lesson.html is a new one-page scroll lesson (4 acts incl. the Truncated
+  Rhombicube); existing pages are kept as deep-dives.
+
+The first thing I want to decide: should lesson.html become the front door
+(index.html) — i.e. the whole site as one scroll — or stay standalone? Walk me
+through the tradeoffs and a plan before changing anything.
+
+Heads-up for verifying animations: the headless preview pauses requestAnimationFrame
+when unfocused, so scroll-driven WebGL looks stale there — confirm motion in a real
+browser (see HANDOFF.md "Verify / gotcha").
